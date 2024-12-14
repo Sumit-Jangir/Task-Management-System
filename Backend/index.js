@@ -14,12 +14,12 @@ const app = express();
 const port = process.env.PORT || 3000;
 const MONGOURL = process.env.MONGOURL;
 
-const corsOptions = {
-  origin: 'https://task-board-7e8t.vercel.app/', 
-  methods: 'GET,POST,PUT,PATCH,DELETE',
-  optionsSuccessStatus: 204,
-};
-app.use(cors(corsOptions));
+// const corsOptions = {
+//   origin: 'https://task-board-7e8t.vercel.app/', 
+//   methods: 'GET,POST,PUT,PATCH,DELETE',
+//   optionsSuccessStatus: 204,
+// };
+app.use(cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -29,11 +29,7 @@ app.use('/list', ListRoute);
 app.use('/task', taskRoute);
 
 mongoose
-  .connect(MONGOURL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    serverSelectionTimeoutMS: 5000, // Timeout after 5s
-  })
+  .connect(MONGOURL)
   .then(() => {
     console.log('MongoDB Connected Successfully');
   })

@@ -10,7 +10,7 @@ function SignUp() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${import.meta.env.VITE_API_KEY}/auth/signup`, {
+      const response = await axios.post(`http://localhost:3000/auth/signup`, {
         ...userDetail,
       });
 
@@ -21,7 +21,7 @@ function SignUp() {
       }
     } catch (error) {
       console.log("error", error);
-      toast.error(error.response?.data?.message || "Please try again.");
+      toast.error(error.response?.data?.message || "Please try again...");
     }
   };
 
