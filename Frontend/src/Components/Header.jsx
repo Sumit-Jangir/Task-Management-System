@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {  useDispatch, useSelector } from "react-redux";
 import { clearToken } from "./Redux/slice";
 
 const Header = () => {
+  const navigate = useNavigate()
+
     const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
 
@@ -13,6 +15,7 @@ const Header = () => {
   const handleLogout = () => {
     dispatch(clearToken());
     setIsLogin(token);
+    navigate('/login')
   };
 
   useEffect(() => {
