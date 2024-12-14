@@ -62,7 +62,7 @@ const ListItem = ({ list, getList }) => {
       onDragOver={handleDragOver}
       onDrop={handleDrop}
     >
-      <div className="flex justify-evenly items-center border-b-2 border-black p-3 text-xl">
+      <div className="bg-gray-200 rounded-md flex justify-evenly items-center border-b-2 border-black p-3 text-xl">
         <button
           className="border-2 border-black px-3 py-2 text-2xl rounded-full bg-gray-200"
           onClick={() => setShowTaskInput(!showTaskInput)}
@@ -81,7 +81,7 @@ const ListItem = ({ list, getList }) => {
           tasks.map((task) => (
             <div
               key={task._id}
-              className="border border-black rounded-sm p-2 m-2"
+              className="border border-black rounded-md bg-gray-200 p-2 m-2"
               draggable="true"
               onDragStart={(e) => handleDragStart(e, task._id)}
             >

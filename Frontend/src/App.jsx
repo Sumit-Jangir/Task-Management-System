@@ -1,32 +1,40 @@
-import { useState } from 'react'
-import './App.css'
-import SignUp from './Components/SignUp.jsx'
-import Header from './Components/Header.jsx'
-import { BrowserRouter, Route, Router, Routes } from 'react-router-dom'
-import Login from './Components/Login.jsx'
-import AddList from './Components/AddList.jsx'
+import { useState } from "react";
+import "./App.css";
+import SignUp from "./Components/SignUp.jsx";
+import Header from "./Components/Header.jsx";
+import { BrowserRouter, Navigate, Outlet, Route, Router, Routes } from "react-router-dom";
+import Login from "./Components/Login.jsx";
+import AddList from "./Components/AddList.jsx";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const useAuth = () => {
+    const token = localStorage.getItem("token");
+    // setUserDetails(true)
+    return token;
+  };
+
+  const ProtectedRoutes = () => {
+    const isAuth = useAuth();
+    return isAuth ? <Outlet /> : <Navigate to="/login" />;
+  };
 
   return (
     <>
-    <BrowserRouter>
-    <Header />
-    <Routes>
-      <Route path='/login' element={<Login />}></Route>
-      <Route path='/signup' element={<SignUp />}></Route>
-      <Route path='/' element={<AddList/>}></Route>
-    </Routes>
-
-    </BrowserRouter>
+      <BrowserRouter>
+        <Header />
+        <Routes>
+          <Route path="/login" element={<Login />}></Route>
+          <Route path="/signup" element={<SignUp />}></Route>
+          <Route element={<ProtectedRoutes />}>
+            <Route path="/" element={<AddList />}></Route>
+          </Route>
+        </Routes>
+      </BrowserRouter>
     </>
-  )
+  );
 }
 
-export default App
-
-
+export default App;
 
 // import { useState } from 'react';
 // // import { Column } from './Column';

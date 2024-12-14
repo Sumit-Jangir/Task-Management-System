@@ -42,12 +42,12 @@ const AddList = () => {
 
   return (
     <>
-      <div className="w-full flex overflow-y-auto">
+      <div className="w-full flex overflow-y-auto mx-6 my-10">
         {Lists.map((list) => (
           <ListItem key={list._id} list={list} getList={getList} />
         ))}
         <div className="min-w-52 text-center border-2 border-black rounded-md m-4">
-          <div className="border-b-2 border-black p-6 flex justify-center items-end text-xl font-bold">
+          <div className="border-b-2 bg-gray-200 rounded-md border-black p-6 flex justify-center items-end text-xl font-bold">
             Add List
           </div>
           <div className=" flex justify-center items-center">
