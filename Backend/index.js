@@ -1,34 +1,46 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import dotenv from 'dotenv'
+import dotenv from 'dotenv';
+import cors from 'cors';
+
 import authRoute from './Router/authRoute.js';
 import ListRoute from './Router/ListRoute.js';
 import taskRoute from './Router/taskRoute.js';
-import cors from 'cors'
 
-dotenv.config()
+dotenv.config(); 
+
 const app = express();
 
 const port = process.env.PORT || 3000;
-const MONGOURL = process.env.MONGOURL
+const MONGOURL = process.env.MONGOURL;
 
-app.use(cors())
-app.use(express.json())
-app.use(express.urlencoded({extended:true}))
-app.use('/auth',authRoute)
-app.use('/list',ListRoute)
-app.use('/task',taskRoute)
+const corsOptions = {
+  origin: '*', 
+  methods: 'GET,POST,PUT,PATCH,DELETE',
+  optionsSuccessStatus: 204,
+};
+app.use(cors(corsOptions));
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-mongoose.connect(MONGOURL)
-.then(()=>{
-    console.log("connected to mongo",MONGOURL);
-})
-.catch(()=>{
-    console.log("errro when connecting to mongo")
-})
+app.use('/auth', authRoute);
+app.use('/list', ListRoute);
+app.use('/task', taskRoute);
 
-app.listen(port,()=>{
-    console.log(`Server is running on port ${port}`);
-    
-})
+mongoose
+  .connect(MONGOURL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    serverSelectionTimeoutMS: 5000, // Timeout after 5s
+  })
+  .then(() => {
+    console.log('MongoDB Connected Successfully');
+  })
+  .catch((err) => {
+    console.error('MongoDB Connection Error:', err.message);
+  });
+
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
