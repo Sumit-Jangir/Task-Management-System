@@ -1,23 +1,21 @@
-// Controller/TaskController.js
-
-import mongoose from 'mongoose';  // Add this import
+import mongoose from 'mongoose';  
 import taskSchema from '../Model/taskSchema.js';
-import listSchema from '../Model/listSchema.js';  // Add this if you haven't already
+import listSchema from '../Model/listSchema.js';  
 
 export const createTask = async (req, res) => {
     const { name, listId } = req.body;
     try {
+        const list = await listSchema.findById(listId);
+        if (!list) {
+            return res.status(404).json({ error: "List not found" });
+        }
 
-      const list = await listSchema.findById(listId);
-      if (!list) {
-        return res.status(404).json({ error: "List not found" });
-      }
+        const task = await taskSchema.create({ name, listId });
 
-      const task = await taskSchema.create({ name, listId });
-      res.status(200).json(task);
+        res.status(200).json(task);  
     } catch (error) {
-      console.error("Error creating task:", error);
-      res.status(500).json({ error: error.message });
+        console.error("Error creating task:", error);
+        res.status(500).json({ error: error.message });
     }
 };
 
@@ -29,9 +27,6 @@ export const getTasksForList = async (req, res) => {
         }
 
         const tasks = await taskSchema.find({ listId });
-        if (!tasks || tasks.length === 0) {
-            return res.status(404).json({ error: "No tasks found for this list" });
-        }
 
         res.status(200).json(tasks);
     } catch (error) {
@@ -39,3 +34,21 @@ export const getTasksForList = async (req, res) => {
         res.status(500).json({ error: "Failed to fetch tasks." });
     }
 };
+
+export const updateTask = async (req, res) => {
+    const { taskId } = req.params;
+    const { listId } = req.body;
+  
+    console.log("jh");
+    try {
+        
+      const task = await taskSchema.findById(taskId);
+      task.listId = listId; 
+      await task.save();
+  
+      res.status(200).json(task);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  };
+  
