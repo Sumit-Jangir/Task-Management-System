@@ -2,6 +2,8 @@ import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv'
 import authRoute from './Router/authRoute.js';
+import ListRoute from './Router/ListRoute.js';
+import taskRoute from './Router/taskRoute.js';
 import cors from 'cors'
 
 dotenv.config()
@@ -14,6 +16,8 @@ app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 app.use('/auth',authRoute)
+app.use('/list',ListRoute)
+app.use('/task',taskRoute)
 
 
 mongoose.connect(MONGOURL)
