@@ -1,6 +1,8 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import ListItem from "./ListItem";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
 const AddList = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -44,14 +46,18 @@ const AddList = () => {
         {Lists.map((list) => (
           <ListItem key={list._id} list={list} getList={getList} />
         ))}
-        <div className="min-w-52 text-center border rounded-md m-3">
-          <div className="border p-4">Add List</div>
-          <button
-            onClick={() => setIsAddModalOpen(true)}
-            className="text-6xl border inline-block rounded-full p-2 m-3"
-          >
-            +
-          </button>
+        <div className="min-w-52 text-center border-2 border-black rounded-md m-4">
+          <div className="border-b-2 border-black p-6 flex justify-center items-end text-xl font-bold">
+            Add List
+          </div>
+          <div className=" flex justify-center items-center">
+            <button
+              onClick={() => setIsAddModalOpen(true)}
+              className="text-6xl border-2 border-black items-center bg-gray-100 rounded-full p-2 m-3"
+            >
+              <FontAwesomeIcon icon={faPlus} />
+            </button>
+          </div>
         </div>
       </div>
 
