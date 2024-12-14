@@ -15,7 +15,7 @@ const port = process.env.PORT || 3000;
 const MONGOURL = process.env.MONGOURL;
 
 const corsOptions = {
-  origin: '*', 
+  origin: 'https://task-board-7e8t.vercel.app/', 
   methods: 'GET,POST,PUT,PATCH,DELETE',
   optionsSuccessStatus: 204,
 };
