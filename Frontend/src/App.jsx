@@ -1,12 +1,10 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
-import SignUp from './Components/Signup'
-import Header from './Components/Header'
+import SignUp from './Components/SignUp.jsx'
+import Header from './Components/Header.jsx'
 import { BrowserRouter, Route, Router, Routes } from 'react-router-dom'
-import Login from './Components/Login'
-import AddList from './Components/AddList'
+import Login from './Components/Login.jsx'
+import AddList from './Components/AddList.jsx'
 
 function App() {
   const [count, setCount] = useState(0)
