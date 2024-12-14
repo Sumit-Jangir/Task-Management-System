@@ -12,7 +12,7 @@ const Task = ({ list, getList }) => {
     }
 
     try {
-      const data = await axios.post("http://localhost:3000/task/create", {
+      const data = await axios.post(`${import.meta.env.VITE_API_KEY}/task/create`, {
         name: newTask,
         listId: list._id,
       });

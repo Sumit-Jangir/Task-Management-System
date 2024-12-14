@@ -30,7 +30,7 @@ const Header = () => {
         className="bg-gray-100 shadow-md py-4 px-6 flex justify-between items-center"
       >
         {/* Logo/Welcome Text */}
-        <Link to={"/"} className="text-xl font-bold text-gray-800">
+        <Link className="text-xl font-bold text-gray-800">
           Welcome User
         </Link>
 

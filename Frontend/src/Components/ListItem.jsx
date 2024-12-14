@@ -15,7 +15,7 @@ const ListItem = ({ list, getList }) => {
     try {
       setLoading(true); // Start loading
       const response = await axios.get(
-        `http://localhost:3000/task/${list._id}`
+        `${import.meta.env.VITE_API_KEY}/task/${list._id}`
       );
       setTasks(response.data);
       console.log("Tasks fetched for list:", response);
@@ -41,7 +41,7 @@ const ListItem = ({ list, getList }) => {
     console.log("Dropped task ID:", taskId);
 
     try {
-      await axios.put(`http://localhost:3000/task/update/${taskId}`, {
+      await axios.put(`${import.meta.env.VITE_API_KEY}/task/update/${taskId}`, {
         listId: list._id,
       });
       getTasks();

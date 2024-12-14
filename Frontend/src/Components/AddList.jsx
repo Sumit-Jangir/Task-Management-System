@@ -13,7 +13,7 @@ const AddList = () => {
 
   const getList = async () => {
     try {
-      const response = await axios.get(`http://localhost:3000/list/${UserId}`);
+      const response = await axios.get(`${import.meta.env.VITE_API_KEY}/list/${UserId}`);
       setLists(response.data);
       console.log("Fetched lists:", response.data);
     } catch (err) {
@@ -28,13 +28,13 @@ const AddList = () => {
   const handleAddList = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:3000/list/create", {
+      await axios.post(`${import.meta.env.VITE_API_KEY}/list/create`, {
         name: username,
         userId: UserId,
       });
-      setUsername(""); // Reset input field
-      setIsAddModalOpen(false); // Close the modal
-      getList(); // Refresh the lists
+      setUsername(""); 
+      setIsAddModalOpen(false); 
+      getList(); 
     } catch (error) {
       console.error("Error creating list:", error);
     }
