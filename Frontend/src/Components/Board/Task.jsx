@@ -4,8 +4,10 @@ import React, { useState } from "react";
 const Task = ({ list, getList }) => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(true);
   const [newTask, setNewTask] = useState("");
+  const userId = localStorage.getItem("userId")
 
-  const addNewTask = async () => {
+  const addNewTask = async (e) => {
+    e.preventDefault();
     if (!newTask.trim()) {
       console.log("Task name is required");
       return;
@@ -15,11 +17,13 @@ const Task = ({ list, getList }) => {
       const data = await axios.post(`${import.meta.env.VITE_API_KEY}/task/create`, {
         name: newTask,
         listId: list._id,
+        userId
       });
 
       console.log("Task created:", data.data);
       setNewTask("");
       getList();
+      setIsAddModalOpen(false)
     } catch (err) {
       console.log("Error creating task:", err);
     }
