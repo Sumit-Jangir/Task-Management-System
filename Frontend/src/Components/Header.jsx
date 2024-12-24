@@ -13,7 +13,7 @@ const Header = () => {
   const handleLogout = () => {
     dispatch(clearToken());
     setIsLogin(token);
-    navigate('/login');
+    navigate("/login");
   };
 
   useEffect(() => {
@@ -27,12 +27,12 @@ const Header = () => {
     >
       {/* Logo/Welcome Text */}
       <div>
-        <Link className="text-2xl text-white font-bold">
-          Welcome User
-        </Link>
+        <Link className="text-2xl text-white font-bold">Welcome User</Link>
         <NavLink
           className={({ isActive }) =>
-            ` text-white ml-10  px-3 py-1 rounded-md ${isActive ? "bg-white text-[#172b4d]" : ""}`
+            ` text-white ml-10  px-3 py-1 rounded-md ${
+              isActive ? "bg-white !text-[#172b4d]" : ""
+            }`
           }
           to="/"
         >
@@ -40,7 +40,9 @@ const Header = () => {
         </NavLink>
         <NavLink
           className={({ isActive }) =>
-            ` text-white ml-2  px-3 py-1 rounded-md ${isActive ? "bg-white text-gray-900" : ""}`
+            ` text-white ml-2  px-3 py-1 rounded-md ${
+              isActive ? "bg-white !text-gray-900" : ""
+            }`
           }
           to="/table"
         >
@@ -59,18 +61,26 @@ const Header = () => {
           </button>
         ) : (
           <>
-            <Link
-              className="px-4 py-2 bg-teal-600 text-white rounded"
-              to="/login/"
+            <NavLink
+              className={({ isActive }) =>
+                ` text-white ml-10  px-3 py-1 rounded-md ${
+                  isActive ? "bg-white !text-[#172b4d]" : ""
+                }`
+              }
+              to="/login"
             >
               Login
-            </Link>
-            <Link
-              className="px-4 py-2 bg-teal-600 text-white rounded"
-              to="/signup/"
+            </NavLink>
+            <NavLink
+              className={({ isActive }) =>
+                ` text-white ml-10  px-3 py-1 rounded-md ${
+                  isActive ? "bg-white !text-[#172b4d]" : ""
+                }`
+              }
+              to="/signup"
             >
               SignUp
-            </Link>
+            </NavLink>
           </>
         )}
       </div>
