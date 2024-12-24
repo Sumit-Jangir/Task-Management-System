@@ -10,6 +10,7 @@ const AddList = () => {
   const [Lists, setLists] = useState([]);
 
   const UserId = localStorage.getItem("userId");
+  const listColor = "#111827"
 
   const getList = async () => {
     try {
@@ -31,6 +32,7 @@ const AddList = () => {
       await axios.post(`${import.meta.env.VITE_API_KEY}/list/create`, {
         name: username,
         userId: UserId,
+        listColor
       });
       setUsername(""); 
       setIsAddModalOpen(false); 
@@ -42,14 +44,15 @@ const AddList = () => {
 
   return (
     <>
-      <div className="w-full flex overflow-y-auto mx-6 my-10">
+      <div className="flex overflow-y-auto mx-6 my-10">
         {Lists.map((list) => (
           <ListItem key={list._id} list={list} getList={getList} />
         ))}
-        <div className="min-w-52 text-center border-2 border-black rounded-md m-4">
-          <div className="border-b-2 bg-gray-200 rounded-md border-black p-6 flex justify-center items-end text-xl font-bold">
+        <div className="min-w-64  bg-gray-900 text-white rounded-xl my-4 p-4 shadow-lg flex flex-col">
+          {/* <div className="border-b-2 bg-gray-200 rounded-md border-black p-6 flex justify-center items-end text-xl font-bold">
             Add List
-          </div>
+          </div> */}
+          <h3 className="border-b border-gray-700 text-lg font-semibold pb-4 "> Add List</h3>
           <div className=" flex justify-center items-center">
             <button
               onClick={() => setIsAddModalOpen(true)}

@@ -17,7 +17,8 @@ const Task = ({ list, getList }) => {
       const data = await axios.post(`${import.meta.env.VITE_API_KEY}/task/create`, {
         name: newTask,
         listId: list._id,
-        userId
+        userId,
+        listName:list.name
       });
 
       console.log("Task created:", data.data);
