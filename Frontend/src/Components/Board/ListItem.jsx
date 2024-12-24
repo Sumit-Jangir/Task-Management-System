@@ -9,7 +9,7 @@ const ListItem = ({ list, getList }) => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true); // Loading state
 
-  console.log("ListID<><<<<<<<<<<<<>", list._id);
+  // console.log("ListID<><<<<<<<<<<<<>", list);
 
   const getTasks = async () => {
     try {
@@ -18,7 +18,7 @@ const ListItem = ({ list, getList }) => {
         `${import.meta.env.VITE_API_KEY}/task/${list._id}`
       );
       setTasks(response.data);
-      console.log("Tasks fetched for list:", response);
+      // console.log("Tasks fetched for list:", response);
     } catch (err) {
       console.error("Error fetching tasks:", err);
     } finally {
@@ -58,18 +58,17 @@ const ListItem = ({ list, getList }) => {
 
   return (
     <div
-      className="min-w-52 border-2 rounded-md border-black m-4 text-center"
+      className="min-w-52 rounded-md border-black m-4 text-center"
       onDragOver={handleDragOver}
       onDrop={handleDrop}
     >
       <div className="bg-gray-200 rounded-md flex justify-evenly items-center border-b-2 border-black p-3 text-xl">
-        <button
+        {/* <button
           className="border-2 border-black px-3 py-2 text-2xl rounded-full bg-gray-200"
           onClick={() => setShowTaskInput(!showTaskInput)}
         >
-          {/* {showTaskInput ? "Cancel" : "+ Add Task"} */}
           <FontAwesomeIcon icon={faPlus} />
-        </button>
+        </button> */}
         <h3>{list.name}</h3>
       </div>
 
