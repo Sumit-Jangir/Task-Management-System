@@ -26,8 +26,8 @@ function SignUp() {
   };
 
   return (
-    <div className=" bg-gray-100 flex justify-center items-center h-[90vh] w-[100vw]">
-      <div className=" bg-white p-5 rounded-lg shadow-md w-[400px] mx-auto">
+    <div className="  flex justify-center items-center h-[90vh] w-[100vw]">
+      <div className=" bg-gray-400 p-5 rounded-lg shadow-md w-[400px] mx-auto">
         <h2 className="text-center mb-5 text-gray-800 text-xl font-semibold">
           Sign Up
         </h2>
@@ -98,7 +98,7 @@ function SignUp() {
           </label>
           <button
             type="submit"
-            className="w-full p-2 bg-teal-600 hover:bg-teal-700 text-white rounded-md font-semibold"
+            className="w-full p-2 bg-gray-800 hover:bg-gray-900 text-white rounded-md font-semibold"
           >
             Sign Up
           </button>

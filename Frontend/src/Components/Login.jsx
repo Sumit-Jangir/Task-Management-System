@@ -36,8 +36,8 @@ function Login() {
   };
 
   return (
-    <div className="login bg-gray-100 flex justify-center items-center h-[90vh] w-[100vw]">
-      <div className="auth-container bg-white p-5 rounded-lg shadow-md w-[400px] mx-auto">
+    <div className="login  flex justify-center items-center h-[90vh] w-[100vw]">
+      <div className="auth-container bg-gray-400 p-5 rounded-lg shadow-md w-[400px] mx-auto">
         <h2 className="text-center mb-5 text-gray-800 text-xl font-semibold">
           Login
         </h2>
@@ -76,7 +76,7 @@ function Login() {
           </label>
           <button
             type="submit"
-            className="w-full p-2 bg-teal-600 hover:bg-teal-700 text-white rounded-md font-semibold"
+            className="w-full p-2 bg-gray-800 hover:bg-gray-900 text-white rounded-md font-semibold"
           >
             Login
           </button>
