@@ -22,7 +22,7 @@ const Table = () => {
 
   useEffect(() => {
     getAllTask();
-  },[]);
+  },[setTaskItem]);
 
   return (
     <div className="min-h-[88vh] bg-gray-800 text-white m-4 rounded-t-md">
