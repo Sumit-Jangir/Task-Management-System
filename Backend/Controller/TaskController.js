@@ -3,21 +3,42 @@ import taskSchema from '../Model/taskSchema.js';
 import listSchema from '../Model/listSchema.js';  
 
 export const createTask = async (req, res) => {
-    const { name, listId } = req.body;
+    const { name, listId,userId ,listName} = req.body;
     try {
         const list = await listSchema.findById(listId);
         if (!list) {
             return res.status(404).json({ error: "List not found" });
         }
 
-        const task = await taskSchema.create({ name, listId });
+        const task = await taskSchema.create({ name, listId, userId ,listName});
 
         res.status(200).json(task);  
     } catch (error) {
         console.error("Error creating task:", error);
         res.status(500).json({ error: error.message });
     }
+}; 
+
+export const addDueDate = async (req, res) => {
+    const { taskId, dueDate } = req.body; 
+    try {
+        const task = await taskSchema.findByIdAndUpdate(
+            taskId, 
+            { dueDate: dueDate }, 
+            // { new: true }  
+        );
+
+        if (!task) {
+            return res.status(404).json({ error: "Task not found" });
+        }
+
+        res.status(200).json(task);  
+    } catch (error) {
+        console.error("Error updating task:", error);
+        res.status(500).json({ error: error.message });
+    }
 };
+
 
 export const getTasksForList = async (req, res) => {
     const { listId } = req.params;
@@ -27,6 +48,19 @@ export const getTasksForList = async (req, res) => {
         }
 
         const tasks = await taskSchema.find({ listId });
+
+        res.status(200).json(tasks);
+    } catch (error) {
+        console.error("Error fetching tasks:", error);
+        res.status(500).json({ error: "Failed to fetch tasks." });
+    }
+};
+
+export const getAllTasks = async (req, res) => {
+    try {
+        const { userId } = req.body;
+
+        const tasks = await taskSchema.find({userId});
 
         res.status(200).json(tasks);
     } catch (error) {

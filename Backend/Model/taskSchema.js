@@ -8,10 +8,19 @@ const task = mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  listName: {
+    type: String,
+  },
   listId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "lists",
     required: true,
+  },
+  userId: {
+    type: String,
+  },
+  dueDate: {
+    type: Date,
   },
 });
 
