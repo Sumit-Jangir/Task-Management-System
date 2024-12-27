@@ -13,3 +13,9 @@
     /* color: #facc15;  */
   }
   
+  .rbc-btn-group button{
+    color: gray;
+  }
+  .rbc-day-slot .rbc-time-slot {
+    background-color: rgba(31, 41, 55, 0.911);
+}

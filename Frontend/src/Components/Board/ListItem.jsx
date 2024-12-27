@@ -6,14 +6,18 @@ import {
   faPlus,
   faEllipsisH,
   faTimes,
+  faPenToSquare,
 } from "@fortawesome/free-solid-svg-icons";
+import ListOptions from "./TaskOptions.jsx";
 
 const ListItem = ({ list, getList }) => {
   const [showTaskInput, setShowTaskInput] = useState(false);
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [openListOptions, setOpenListOptions] = useState(false);
+  const [openTaskOptions, setOpenTaskOptions] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
+  const [selectedTaskId, setSelectedTaskId] = useState(null); // Track selected task for options
 
   const getTasks = async () => {
     try {
@@ -57,7 +61,7 @@ const ListItem = ({ list, getList }) => {
   };
 
   const handleOpenListOptions = (e) => {
-    const rect = e.target.getBoundingClientRect(); // Get the position of the clicked button
+    const rect = e.target.getBoundingClientRect();
     setMenuPosition({
       top: rect.top + window.scrollY,
       left: rect.left + window.scrollX,
@@ -65,10 +69,55 @@ const ListItem = ({ list, getList }) => {
     setOpenListOptions(true);
   };
 
+  const handleOpenTaskOptions = (e, taskId) => {
+    setSelectedTaskId(taskId); // Set the selected task for options
+    const rect = e.target.getBoundingClientRect();
+    setMenuPosition({
+      top: rect.top + window.scrollY,
+      left: rect.left + window.scrollX,
+    });
+    setOpenTaskOptions(true);
+  };
+
+  const updateListColor = async (listId, colorValue) => {
+    try {
+      const response = await axios.put(
+        `${import.meta.env.VITE_API_KEY}/list/updatecolor`,
+        {
+          listId,
+          listColor: colorValue,
+        }
+      );
+      getList();
+      console.log("Color updated:", response.data);
+    } catch (error) {
+      console.error(
+        "Error updating color:",
+        error.response?.data || error.message
+      );
+    }
+  };
+
+  const handleDeletelist = async (listId) => {
+    try {
+      const response = await axios.delete(
+        `${import.meta.env.VITE_API_KEY}/list/deleteList`,
+        { data: { listId } }
+      );
+      getList();
+    } catch (error) {
+      console.error(
+        "Error deleting list:",
+        error.response?.data || error.message
+      );
+    }
+  };
+
   return (
     <>
       <div
-        className="min-w-64 h-fit bg-gray-900 text-white rounded-xl p-4 m-4 shadow-lg flex flex-col"
+        className="max-h-[78vh] min-w-64 h-fit text-white rounded-xl p-3 m-4 shadow-lg flex flex-col overflow-auto"
+        style={{ backgroundColor: list.listColor }}
         onDragOver={handleDragOver}
         onDrop={handleDrop}
       >
@@ -77,7 +126,7 @@ const ListItem = ({ list, getList }) => {
           <div className="flex space-x-2">
             <button
               onClick={handleOpenListOptions}
-              className="text-gray-400 hover:text-gray-200"
+              className="text-gray-100 hover:bg-gray-400 rounded-md hover:text-gray-800 px-2 "
             >
               <FontAwesomeIcon icon={faEllipsisH} />
             </button>
@@ -88,12 +137,27 @@ const ListItem = ({ list, getList }) => {
         <div className="space-y-2 mt-3">
           {tasks.map((task) => (
             <div
+              onClick={(e) => handleOpenTaskOptions(e, task._id)} // Open task options for selected task
               key={task._id}
-              className="bg-gray-800 text-white rounded-md px-3 py-2 shadow-sm"
+              className=" bg-gray-800 text-gray-400 rounded-md px-3 py-2 shadow-sm"
               draggable="true"
               onDragStart={(e) => handleDragStart(e, task._id)}
             >
-              {task.name}
+              <div className="flex justify-between">
+                {task.name}
+                <FontAwesomeIcon className="opacity-30" icon={faPenToSquare} />
+              </div>
+              {/* {task.startDate} */}
+
+              {openTaskOptions && (
+                <ListOptions
+                  task={task}
+                  list={list}
+                  setOpenTaskOptions={setOpenTaskOptions}
+                  selectedTaskId={selectedTaskId} // Pass selected task ID to options
+                  // handleDeleteTask={handleDeleteTask} // Delete task functionality
+                />
+              )}
             </div>
           ))}
         </div>
@@ -103,20 +167,35 @@ const ListItem = ({ list, getList }) => {
           className="mt-3 text-sm flex items-center space-x-2 text-gray-400 hover:text-gray-200"
           onClick={() => setShowTaskInput(!showTaskInput)}
         >
-          <FontAwesomeIcon icon={faPlus} />
-          <span>Add a card</span>
+          {!showTaskInput ? (
+            <span>
+              <FontAwesomeIcon icon={faPlus} />
+              <span> Add a card </span>
+            </span>
+          ) : (
+            ""
+          )}
         </button>
 
         {/* Render Task Input if visible */}
-        {showTaskInput && <Task list={list} getList={getList} />}
+        {showTaskInput && (
+          <Task
+            list={list}
+            getList={getList}
+            setShowTaskInput={setShowTaskInput}
+            showTaskInput={showTaskInput}
+          />
+        )}
       </div>
 
       {/* Options Modal */}
       {openListOptions && (
-        <div className="fixed z-50 inset-0 flex items-center justify-center bg-black bg-opacity-5"
-        onClick={() => setOpenListOptions(false)}>
+        <div
+          className="fixed z-50 inset-0 flex items-center justify-center bg-black bg-opacity-5"
+          onClick={() => setOpenListOptions(false)}
+        >
           <div
-            className="relative text-slate-300 min-w-64 bg-gray-800  rounded-lg shadow-lg p-3"
+            className="relative text-slate-300 min-w-52 bg-gray-800 rounded-lg shadow-lg p-3"
             style={{
               position: "absolute",
               top: `${menuPosition.top}px`,
@@ -125,20 +204,36 @@ const ListItem = ({ list, getList }) => {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex justify-between border-b border-gray-700 pb-2 px-2">
-              <span className="text-right min-w-36 ">List Options</span>
-              <button onClick={() => setOpenListOptions(false)} className="">
+              <span>List Options</span>
+              <button onClick={() => setOpenListOptions(false)}>
                 <FontAwesomeIcon icon={faTimes} />
               </button>
             </div>
 
-            <div>
-            <label>Change Color:</label>
+            <div className="flex items-center justify-between my-4 hover:bg-gray-500 px-2 py-1 rounded-sm">
+              <label htmlFor="color">Change Color -</label>
+              <div
+                className="w-7 h-7 rounded-full cursor-pointer overflow-hidden"
+                style={{
+                  backgroundColor: `${list.listColor}`,
+                }}
+              >
                 <input
+                  id="color"
+                  className="w-full h-full opacity-0 cursor-pointer "
                   type="color"
-                  value={list.color}
-                  onChange={(e) => updateListColor(list._id, e.target.value)} // Use updateListColor
+                  value={list.listColor}
+                  onChange={(e) => updateListColor(list._id, e.target.value)}
                 />
+              </div>
             </div>
+
+            <button
+              onClick={() => handleDeletelist(list._id)}
+              className=" mb-4 hover:bg-gray-500 px-2 py-1 rounded-sm"
+            >
+              Delete List
+            </button>
           </div>
         </div>
       )}

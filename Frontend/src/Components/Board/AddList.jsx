@@ -6,15 +6,17 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
 const AddList = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [username, setUsername] = useState("");
+  const [listName, setListName] = useState("");
   const [Lists, setLists] = useState([]);
 
   const UserId = localStorage.getItem("userId");
-  const listColor = "#111827"
+  const listColor = "#111827";
 
   const getList = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_KEY}/list/${UserId}`);
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_KEY}/list/${UserId}`
+      );
       setLists(response.data);
       console.log("Fetched lists:", response.data);
     } catch (err) {
@@ -30,13 +32,13 @@ const AddList = () => {
     e.preventDefault();
     try {
       await axios.post(`${import.meta.env.VITE_API_KEY}/list/create`, {
-        name: username,
+        name: listName,
         userId: UserId,
-        listColor
+        listColor,
       });
-      setUsername(""); 
-      setIsAddModalOpen(false); 
-      getList(); 
+      setListName("");
+      setIsAddModalOpen(false);
+      getList();
     } catch (error) {
       console.error("Error creating list:", error);
     }
@@ -44,60 +46,62 @@ const AddList = () => {
 
   return (
     <>
-      <div className="flex overflow-y-auto mx-6 my-10">
-        {Lists.map((list) => (
-          <ListItem key={list._id} list={list} getList={getList} />
-        ))}
-        <div className="min-w-64  bg-gray-900 text-white rounded-xl my-4 p-4 shadow-lg flex flex-col">
-          {/* <div className="border-b-2 bg-gray-200 rounded-md border-black p-6 flex justify-center items-end text-xl font-bold">
-            Add List
-          </div> */}
-          <h3 className="border-b border-gray-700 text-lg font-semibold pb-4 "> Add List</h3>
-          <div className=" flex justify-center items-center">
-            <button
-              onClick={() => setIsAddModalOpen(true)}
-              className="text-6xl border-2 border-black items-center bg-gray-100 rounded-full p-2 m-3"
-            >
-              <FontAwesomeIcon icon={faPlus} />
-            </button>
+      <div className="h-[84vh] overflow-y-auto">
+        <div className="flex  mx-2 my-4">
+          {Lists.map((list) => (
+            <ListItem key={list._id} list={list} getList={getList} />
+          ))}
+          <div className="min-w-64 h-fit bg-gray-900 text-white rounded-xl m-4 p-4 shadow-lg flex flex-col">
+            <h3 className="border-b border-gray-700 text-lg font-semibold pb-4 ">
+              {" "}
+              Add List
+            </h3>
+            <div>
+              <button
+                className="block mt-3 text-sm items-center space-x-2 text-gray-400 hover:text-gray-200"
+                onClick={() => setIsAddModalOpen(!isAddModalOpen)}
+              >
+                {!isAddModalOpen ? (
+                  <span>
+                    <FontAwesomeIcon icon={faPlus} />
+                    <span> Add another list </span>
+                  </span>
+                ) : (
+                  ""
+                )}
+              </button>
+
+              {isAddModalOpen && (
+                <form onSubmit={handleAddList} className="flex flex-col ">
+                  <input
+                    className="w-full border rounded p-1 mt-2 outline-none bg-transparent"
+                    type="text"
+                    value={listName}
+                    onChange={(e) => setListName(e.target.value)}
+                    placeholder="Enter list name"
+                  />
+
+                  <div>
+                    <button
+                      type="submit"
+                      className="bg-gray-700 hover:bg-gray-800 w-24 text-white uppercase px-4 py-1 rounded "
+                    >
+                      Save
+                    </button>
+
+                    <span
+                      className="text-gray-700 hover:text-gray-800 cursor-pointer text-4xl font-bold px-2 h-4 "
+                      onClick={() => setIsAddModalOpen(false)}
+                    >
+                      &times;
+                    </span>
+                  </div>
+                </form>
+              )}
+            </div>
           </div>
         </div>
       </div>
-
-      {isAddModalOpen && (
-        <div className="fixed z-50 inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-gray-200 py-4 px-5 rounded-lg shadow-lg max-w-md w-full relative">
-            <span
-              className="text-gray-700 hover:text-gray-800 cursor-pointer text-4xl font-bold absolute top-0 right-3"
-              onClick={() => setIsAddModalOpen(false)}
-            >
-              &times;
-            </span>
-            <h3 className="text-xl font-bold pb-4">Add New List</h3>
-
-            <form onSubmit={handleAddList} className="flex flex-col gap-2">
-              <label>
-                Name:
-                <input
-                  placeholder="Enter list name"
-                  className="w-full border rounded p-2 outline-none bg-white"
-                  type="text"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  required
-                />
-              </label>
-
-              <button
-                type="submit"
-                className="bg-black text-white uppercase mt-3 px-4 py-2 rounded float-end"
-              >
-                Save
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
     </>
   );
 };
