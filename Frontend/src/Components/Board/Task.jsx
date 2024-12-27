@@ -1,10 +1,10 @@
 import axios from "axios";
 import React, { useState } from "react";
 
-const Task = ({ list, getList }) => {
+const Task = ({ list, getList ,showTaskInput,setShowTaskInput }) => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(true);
   const [newTask, setNewTask] = useState("");
-  const userId = localStorage.getItem("userId")
+  const userId = localStorage.getItem("userId");
 
   const addNewTask = async (e) => {
     e.preventDefault();
@@ -14,17 +14,20 @@ const Task = ({ list, getList }) => {
     }
 
     try {
-      const data = await axios.post(`${import.meta.env.VITE_API_KEY}/task/create`, {
-        name: newTask,
-        listId: list._id,
-        userId,
-        listName:list.name
-      });
+      const data = await axios.post(
+        `${import.meta.env.VITE_API_KEY}/task/create`,
+        {
+          name: newTask,
+          listId: list._id,
+          userId,
+          listName: list.name,
+        }
+      );
 
       console.log("Task created:", data.data);
       setNewTask("");
       getList();
-      setIsAddModalOpen(false)
+      setShowTaskInput(false);
     } catch (err) {
       console.log("Error creating task:", err);
     }
@@ -32,39 +35,41 @@ const Task = ({ list, getList }) => {
 
   return (
     <>
-      {isAddModalOpen && (
-      <div className="fixed z-50 inset-0 flex items-center justify-center bg-black bg-opacity-50">
-        <div className="bg-gray-200 py-4 px-5 rounded-lg shadow-lg max-w-md w-full relative">
-          <span
+      {showTaskInput && (
+        /* <span
             className="text-gray-700 hover:text-gray-800 cursor-pointer text-4xl font-bold absolute top-0 right-3"
             onClick={() => setIsAddModalOpen(false)}
           >
             &times;
           </span>
-          <h3 className="text-xl font-bold pb-4">Add New List</h3>
+          <h3 className="text-xl font-bold pb-4">Add New List</h3> */
 
-          <form onSubmit={addNewTask} className="flex flex-col gap-2">
-            <label>
-              Name:
-              <input
-                className="w-full border rounded p-2 outline-none bg-white"
-                type="text"
-                value={newTask}
-                onChange={(e) => setNewTask(e.target.value)}
-                placeholder="Enter task name"
-              />
-            </label>
+        <form onSubmit={addNewTask} className="flex flex-col p">
+          <input
+            className="w-full border rounded p-1 mt-2 outline-none bg-transparent"
+            type="text"
+            value={newTask}
+            onChange={(e) => setNewTask(e.target.value)}
+            placeholder="Enter task name"
+          />
 
+          <div>
             <button
               type="submit"
-              className="bg-black text-white uppercase mt-3 px-4 py-2 rounded float-end"
+              className="bg-gray-700 hover:bg-gray-800 w-24 text-white uppercase px-4 py-1 rounded "
             >
               Save
             </button>
-          </form>
-        </div>
-      </div>
-       )}
+
+            <span
+              className="text-gray-700 hover:text-gray-800 cursor-pointer text-4xl font-bold px-2 h-4 "
+              onClick={() => setShowTaskInput(false)}
+            >
+              &times;
+            </span>
+          </div>
+        </form>
+      )}
     </>
   );
 };
