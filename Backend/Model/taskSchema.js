@@ -19,9 +19,17 @@ const task = mongoose.Schema({
   userId: {
     type: String,
   },
+  startDate: {
+    type: Date,
+  },
   dueDate: {
     type: Date,
   },
+  location: {
+    type: Boolean,
+    default: false
+  },
+
 });
 
 const taskSchema = mongoose.model("Task", task);

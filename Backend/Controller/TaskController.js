@@ -38,6 +38,7 @@ export const addDueDate = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
 export const addStartDate = async (req, res) => {
   try {
     const { taskId, startDate } = req.body;
@@ -45,6 +46,44 @@ export const addStartDate = async (req, res) => {
       taskId,
       { startDate}
       // { new: true }
+    );
+
+    if (!task) {
+      return res.status(404).json({ error: "Task not found" });
+    }
+
+    res.status(200).json(task);
+  } catch (error) {
+    console.error("Error updating task:", error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const setLocation = async (req, res) => {
+  try {
+    const { taskId, location } = req.body;
+    const task = await taskSchema.findByIdAndUpdate(
+      taskId,
+      { location}
+      // { new: true }
+    );
+
+    if (!task) {
+      return res.status(404).json({ error: "Task not found" });
+    }
+
+    res.status(200).json(task);
+  } catch (error) {
+    console.error("Error updating task:", error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const getLocation = async (req, res) => {
+  try {
+    const { taskId } = req.body;
+    const task = await taskSchema.findById(
+      taskId,
     );
 
     if (!task) {
