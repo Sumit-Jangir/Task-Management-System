@@ -1,27 +1,32 @@
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios"; // Import axios
+import Map from "../map/Map";
 
-const ListOptions = ({ task, list, setOpenTaskOptions, selectedTaskId }) => {
+const TaskOptions = ({ task, list, setOpenTaskOptions, getTasks }) => {
   const [dueDate, setDueDate] = useState("");
   const [startDate, setStartDate] = useState("");
   const [isTaskFeatureOpen, setIsTaskFeatureOpen] = useState("");
   const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
+  const [location, setLocation] = useState({
+    islocationOn: false,
+    locationGet: false,
+  });
+  const [labelToggle, setLabelToggle] = useState(false);
 
   const handleSave = async () => {
-    if(startDate){
+    if (startDate) {
       try {
         const response = await axios.post(
           `${import.meta.env.VITE_API_KEY}/task/startDate`,
           {
-            taskId: selectedTaskId,
+            taskId: task._id,
             startDate,
           }
         );
 
         if (response.status === 200) {
-          console.log("chal gai dateeee",selectedTaskId)
           setIsTaskFeatureOpen(""); // Close the options after saving
         }
       } catch (error) {
@@ -38,7 +43,7 @@ const ListOptions = ({ task, list, setOpenTaskOptions, selectedTaskId }) => {
         const response = await axios.post(
           `${import.meta.env.VITE_API_KEY}/task/dueDate`,
           {
-            taskId: selectedTaskId,
+            taskId: task._id,
             dueDate: dueDate,
           }
         );
@@ -55,7 +60,6 @@ const ListOptions = ({ task, list, setOpenTaskOptions, selectedTaskId }) => {
         }
       }
     }
-    
   };
 
   const handleOpenTaskOptions = (e, name) => {
@@ -67,28 +71,80 @@ const ListOptions = ({ task, list, setOpenTaskOptions, selectedTaskId }) => {
     setIsTaskFeatureOpen(name);
   };
 
-  const handlelocation = async () => {
+  const handleGetLocation = async () => {
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_API_KEY}/task/dueDate`,
+        `${import.meta.env.VITE_API_KEY}/task/getLocation`,
         {
-          taskId: selectedTaskId,
-          dueDate: dueDate,
+          taskId: task._id,
         }
       );
+
+      setLocation((prevState) => ({
+        ...prevState,
+        locationGet: response.data.location,
+      }));
+      console.log(response.data.location);
     } catch (error) {
-      console.error("Error updating task:", error);
+      console.error("Error getting location:", error);
+    }
+  };
+
+  useEffect(() => {
+    handleGetLocation();
+  }, []);
+
+  const handleSetLocation = async () => {
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_KEY}/task/setLocation`,
+        {
+          taskId: task._id,
+          location: !location.locationGet, // Toggle location state before sending the request
+        }
+      );
+
+      setLocation((prevState) => ({
+        ...prevState,
+        islocationOn: response.data.location,
+      }));
+      handleGetLocation();
+      setIsTaskFeatureOpen("");
+    } catch (error) {
+      console.error("Error setting location:", error);
+    }
+  };
+
+  const updateTaskColor = async (colorValue = "#1F293780") => {
+    try {
+      const response = await axios.put(
+        `${import.meta.env.VITE_API_KEY}/task/updateTaskColor`,
+        {
+          taskId: task._id,
+          taskColor: colorValue,
+        }
+      );
+      console.log("Color updated:", response.data);
+      getTasks();
+    } catch (error) {
+      console.error(
+        "Error updating color:",
+        error.response?.data || error.message
+      );
     }
   };
 
   return (
     <>
       <div
-        className="fixed z-[100] inset-0 flex items-center justify-center bg-black bg-opacity-50"
-        onClick={() => setOpenTaskOptions(false)}
+        className="fixed z-[100] inset-0 flex items-center justify-center bg-black bg-opacity-5"
+        onClick={(e) => {
+          e.stopPropagation();
+          setOpenTaskOptions(false);
+        }}
       >
         <div
-          className="relative text-slate-300 min-w-52 bg-gray-800 rounded-lg shadow-lg p-3"
+          className="relative text-slate-300 w-[600px] bg-gray-800 rounded-lg shadow-lg p-3"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="flex justify-between pb-2 px-2">
@@ -128,36 +184,81 @@ const ListOptions = ({ task, list, setOpenTaskOptions, selectedTaskId }) => {
           </div>
 
           <div className="flex">
-            <div className="w-[360px]">
-              {/* {<div className="p-2 ml-6">Activity</div>} */}
+            <div className="w-[380px]">
+              {location.locationGet && (
+                <div className="p-2 ml-6">
+                  Location
+                  <div className="h-44  overflow-hidden rounded-md">
+                    <div className="h-44 scale-y-[1.4]">
+                      <Map />
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
-            <div className="flex flex-col  w-32 mb-4 mx-4 text-start">
+            <div className="flex flex-col  w-40 mb-4 mx-4 text-lg">
               <button
                 onClick={(e) => handleOpenTaskOptions(e, "date")}
-                className="bg-gray-700 rounded-sm my-1 pl-3 text-start"
+                className="bg-gray-700 rounded-sm my-1 py-1 pl-3 text-start"
               >
                 Dates
               </button>
               <button
-                onClick={(e) => handleOpenTaskOptions(e, "label")}
-                className="bg-gray-700 rounded-sm my-1 pl-3 text-start"
+                onClick={(e) => setLabelToggle(!labelToggle)}
+                className="bg-gray-700 rounded-sm my-1 py-1 pl-3 text-start"
               >
                 Label
               </button>
+
+              {labelToggle && (
+                <div className="flex flex-wrap gap-y-2 justify-between my-2">
+                  <button
+                    onClick={() => updateTaskColor("#216e4e")}
+                    className="h-7 w-[31%] rounded-sm  bg-[#216e4e]"
+                  ></button>
+                  <button
+                    onClick={() => updateTaskColor("#a54800")}
+                    className="h-7 w-[31%]  rounded-sm  bg-[#a54800]"
+                  ></button>
+                  <button
+                    onClick={() => updateTaskColor("#943d73")}
+                    className="h-7 w-[31%] rounded-sm  bg-[#943d73]"
+                  ></button>
+                  <button
+                    onClick={() => updateTaskColor("#5e4db2")}
+                    className="h-7 w-[31%] rounded-sm  bg-[#5e4db2]"
+                  ></button>
+                  <button
+                    onClick={() => updateTaskColor("#206a83")}
+                    className="h-7 w-[31%] rounded-sm  bg-[#206a83]"
+                  ></button>
+                  <button
+                    onClick={() => updateTaskColor("#596773")}
+                    className="h-7 w-[31%] rounded-sm  bg-[#596773]"
+                  ></button>
+                  <button
+                    onClick={() => updateTaskColor()}
+                    className="w-full bg-gray-700/30 text-sm rounded-md my-1 mx-4 py-1 "
+                  >
+                    Remove Color
+                  </button>
+                </div>
+              )}
+
               <button
                 onClick={(e) => handleOpenTaskOptions(e, "attachment")}
-                className="bg-gray-700 rounded-sm my-1 pl-3 text-start"
+                className="bg-gray-700 rounded-sm my-1 py-1 pl-3 text-start"
               >
                 Attachment
               </button>
               <button
                 onClick={(e) => handleOpenTaskOptions(e, "location")}
-                className="bg-gray-700 rounded-sm my-1 pl-3 text-start"
+                className="bg-gray-700 rounded-sm my-1 py-1 pl-3 text-start"
               >
                 Location
               </button>
-              <button className="bg-gray-700 rounded-sm my-1 pl-3 text-start">
+              <button className="bg-gray-700 rounded-sm my-1 py-1 pl-3 text-start">
                 Delete card
               </button>
             </div>
@@ -167,7 +268,7 @@ const ListOptions = ({ task, list, setOpenTaskOptions, selectedTaskId }) => {
 
       {isTaskFeatureOpen == "date" && (
         <div
-          className="fixed z-[100] inset-0 flex items-center justify-center bg-black bg-opacity-10"
+          className="fixed z-[100] inset-0 flex items-center justify-center bg-black bg-opacity-5"
           onClick={() => setIsTaskFeatureOpen("")}
         >
           <div
@@ -230,7 +331,7 @@ const ListOptions = ({ task, list, setOpenTaskOptions, selectedTaskId }) => {
             style={{
               position: "absolute",
               top: `${menuPosition.top}px`,
-              left: `${-200 + menuPosition.left}px`,
+              left: `${-170 + menuPosition.left}px`,
             }}
             onClick={(e) => e.stopPropagation()}
           >
@@ -241,10 +342,10 @@ const ListOptions = ({ task, list, setOpenTaskOptions, selectedTaskId }) => {
               </button>
             </div>
             <button
-              onClick={handlelocation}
+              onClick={handleSetLocation}
               className=" border hover:bg-gray-600 px-4 py-1 my-1 rounded"
             >
-              Turn on Location
+              {location.locationGet ? "Disable Location" : "Enable Location"}
             </button>
           </div>
         </div>
@@ -253,4 +354,4 @@ const ListOptions = ({ task, list, setOpenTaskOptions, selectedTaskId }) => {
   );
 };
 
-export default ListOptions;
+export default TaskOptions;

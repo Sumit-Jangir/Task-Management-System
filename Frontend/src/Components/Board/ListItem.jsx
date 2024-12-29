@@ -9,6 +9,7 @@ import {
   faPenToSquare,
 } from "@fortawesome/free-solid-svg-icons";
 import ListOptions from "./TaskOptions.jsx";
+import TaskOptions from "./TaskOptions.jsx";
 
 const ListItem = ({ list, getList }) => {
   const [showTaskInput, setShowTaskInput] = useState(false);
@@ -17,7 +18,8 @@ const ListItem = ({ list, getList }) => {
   const [openListOptions, setOpenListOptions] = useState(false);
   const [openTaskOptions, setOpenTaskOptions] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
-  const [selectedTaskId, setSelectedTaskId] = useState(null); // Track selected task for options
+  const [selectedTask, setSelectedTask] = useState(null);
+  
 
   const getTasks = async () => {
     try {
@@ -69,8 +71,8 @@ const ListItem = ({ list, getList }) => {
     setOpenListOptions(true);
   };
 
-  const handleOpenTaskOptions = (e, taskId) => {
-    setSelectedTaskId(taskId); // Set the selected task for options
+  const handleOpenTaskOptions = (e, task) => {
+    setSelectedTask(task); // Set the selected task for options
     const rect = e.target.getBoundingClientRect();
     setMenuPosition({
       top: rect.top + window.scrollY,
@@ -113,6 +115,8 @@ const ListItem = ({ list, getList }) => {
     }
   };
 
+  
+
   return (
     <>
       <div
@@ -137,7 +141,8 @@ const ListItem = ({ list, getList }) => {
         <div className="space-y-2 mt-3">
           {tasks.map((task) => (
             <div
-              onClick={(e) => handleOpenTaskOptions(e, task._id)} // Open task options for selected task
+              onClick={(e) => handleOpenTaskOptions(e, task)} 
+              style={{backgroundColor:`${task.taskColor}`}}
               key={task._id}
               className=" bg-gray-800 text-gray-400 rounded-md px-3 py-2 shadow-sm"
               draggable="true"
@@ -150,11 +155,11 @@ const ListItem = ({ list, getList }) => {
               {/* {task.startDate} */}
 
               {openTaskOptions && (
-                <ListOptions
-                  task={task}
+                <TaskOptions
+                  task={selectedTask}
                   list={list}
                   setOpenTaskOptions={setOpenTaskOptions}
-                  selectedTaskId={selectedTaskId} // Pass selected task ID to options
+                  getTasks = {getTasks}
                   // handleDeleteTask={handleDeleteTask} // Delete task functionality
                 />
               )}
