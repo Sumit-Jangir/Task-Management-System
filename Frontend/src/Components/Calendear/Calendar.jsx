@@ -38,9 +38,9 @@ const CalendarComponent = () => {
   },[]); // Empty dependency array ensures it runs once on mount
   
   return (
-    <div className="h-[80vh]">
+    <div className="h-[80vh] overflow-auto">
 
-    <div className="h-[79vh] overflow-y-auto border-2 border-gray-700 p-6 bg-gradient-to-br from-gray-800 via-gray-900 to-black text-green-400 m-6 rounded-xl shadow-lg overflow-auto">
+    <div className="h-[100vh] overflow-y-auto border-2 border-gray-700 p-6 bg-gradient-to-br from-gray-800 via-gray-900 to-black text-green-400 m-6 rounded-xl shadow-lg overflow-auto">
       <Calendar
         localizer={localizer}
         events={events} // Use the events state from the API
