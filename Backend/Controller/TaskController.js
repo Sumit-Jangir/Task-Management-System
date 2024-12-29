@@ -161,3 +161,23 @@ export const updateTask = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+export const updateTaskColor = async (req, res) => {
+  try {
+    const { taskId, taskColor } = req.body; 
+
+    console.log(">>>>>>>",taskId, taskColor)
+
+    const updatedTask = await taskSchema.findByIdAndUpdate(
+      taskId, 
+      { taskColor }, 
+      { new: true, upsert: true }
+    );
+    if (!updatedTask) {
+      return res.status(404).json({ error: "List not found" });
+    }
+    res.status(200).json(updatedTask);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
