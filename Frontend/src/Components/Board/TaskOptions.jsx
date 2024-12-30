@@ -134,6 +134,25 @@ const TaskOptions = ({ task, list, setOpenTaskOptions, getTasks }) => {
     }
   };
 
+  const handleDeleteTask = async () => {
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_KEY}/task/deleteTask`,
+        {
+          taskId: task._id,
+        }
+      );
+      console.log("Color updated:", response.data);
+      setOpenTaskOptions(false)
+      getTasks();
+    } catch (error) {
+      console.error(
+        "Error",
+        error.response?.data || error.message
+      );
+    }
+  };
+
   return (
     <>
       <div
@@ -200,13 +219,13 @@ const TaskOptions = ({ task, list, setOpenTaskOptions, getTasks }) => {
             <div className="flex flex-col  w-40 mb-4 mx-4 text-lg">
               <button
                 onClick={(e) => handleOpenTaskOptions(e, "date")}
-                className="bg-gray-700 rounded-sm my-1 py-1 pl-3 text-start"
+                className="bg-gray-700 hover:bg-gray-600 rounded-sm my-1 py-1 pl-3 text-start"
               >
                 Dates
               </button>
               <button
                 onClick={(e) => setLabelToggle(!labelToggle)}
-                className="bg-gray-700 rounded-sm my-1 py-1 pl-3 text-start"
+                className="bg-gray-700 hover:bg-gray-600 rounded-sm my-1 py-1 pl-3 text-start"
               >
                 Label
               </button>
@@ -239,7 +258,7 @@ const TaskOptions = ({ task, list, setOpenTaskOptions, getTasks }) => {
                   ></button>
                   <button
                     onClick={() => updateTaskColor()}
-                    className="w-full bg-gray-700/30 text-sm rounded-md my-1 mx-4 py-1 "
+                    className="w-full bg-gray-700 hover:bg-gray-600/30 text-sm rounded-md my-1 mx-4 py-1 "
                   >
                     Remove Color
                   </button>
@@ -248,17 +267,17 @@ const TaskOptions = ({ task, list, setOpenTaskOptions, getTasks }) => {
 
               <button
                 onClick={(e) => handleOpenTaskOptions(e, "attachment")}
-                className="bg-gray-700 rounded-sm my-1 py-1 pl-3 text-start"
+                className="bg-gray-700 hover:bg-gray-600 rounded-sm my-1 py-1 pl-3 text-start"
               >
                 Attachment
               </button>
               <button
                 onClick={(e) => handleOpenTaskOptions(e, "location")}
-                className="bg-gray-700 rounded-sm my-1 py-1 pl-3 text-start"
+                className="bg-gray-700 hover:bg-gray-600 rounded-sm my-1 py-1 pl-3 text-start"
               >
                 Location
               </button>
-              <button className="bg-gray-700 rounded-sm my-1 py-1 pl-3 text-start">
+              <button onClick={handleDeleteTask} className="bg-gray-700 hover:bg-red-500 rounded-sm my-1 py-1 pl-3 text-start">
                 Delete card
               </button>
             </div>
@@ -312,7 +331,7 @@ const TaskOptions = ({ task, list, setOpenTaskOptions, getTasks }) => {
               />
             </label>
             <button
-              className="block bg-gray-700 w-40 text-white px-4 py-1 rounded"
+              className="block bg-gray-700 hover:bg-gray-600 w-40 text-white px-4 py-1 rounded"
               onClick={handleSave}
             >
               Save
