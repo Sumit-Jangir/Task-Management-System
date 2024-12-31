@@ -5,11 +5,11 @@
   }
   
   .rbc-day-bg {
-    background-color: rgba(31, 41, 55, 0.8); 
+    background-color: rgba(19, 25, 33, 0.8); 
   }
   
   .rbc-header {
-    background-color: #1f2937; /* Dark header */
+    background-color: #1e252e; /* Dark header */
     /* color: #facc15;  */
   }
   
@@ -17,5 +17,5 @@
     color: gray;
   }
   .rbc-day-slot .rbc-time-slot {
-    background-color: rgba(31, 41, 55, 0.911);
+    background-color: rgba(25, 33, 43, 0.911);
 }
