@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import moment from "moment";
 
 const Table = () => {
   const [taskItem, setTaskItem] = useState([]);
@@ -22,10 +23,12 @@ const Table = () => {
 
   useEffect(() => {
     getAllTask();
-  },[setTaskItem]);
+  }, [setTaskItem]);
+
+  console.log(!"hloo");
 
   return (
-    <div className="min-h-[88vh] bg-gray-800 text-white m-4 rounded-t-md">
+    <div className="h-[78vh] bg-gray-900 text-white m-4 mt-6 rounded-md overflow-y-auto">
       <div className=" flex justify-center p-4">
         <table className="table-auto w-full ">
           <thead>
@@ -41,19 +44,13 @@ const Table = () => {
               <tr key={index} className="border-b border-gray-600">
                 <td className=" px-4 py-2">{item.name}</td>
                 <td className=" px-4 py-2">{item.listName}</td>
-                {/* <td className=" px-4 py-2">
-                  <div className="flex space-x-2">
-                    {item.labels.map((label, i) => (
-                      <span
-                        key={i}
-                        className={`h-4 w-4 rounded-full ${getLabelColor(
-                          label
-                        )}`}
-                      ></span>
-                    ))}
-                  </div>
+                <td className=" px-4 py-2">
+                  <div
+                    className="h-6 w-12 rounded"
+                    style={{ backgroundColor: item.taskColor || "#374151" }}
+                  ></div>
                 </td>
-                <td className=" px-4 py-2">{item.dueDate}</td> */}
+                <td className=" px-4 py-2">{item.dueDate ? (moment(item.dueDate).format("DD-MM-YYYY")): "-"}</td>
               </tr>
             ))}
           </tbody>
