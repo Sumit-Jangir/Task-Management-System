@@ -1,44 +1,31 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import ListItem from "./ListItem.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
+import useGetLists from "../CustomHooks/useGetLists.jsx";
 
 const AddList = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [listName, setListName] = useState("");
-  const [Lists, setLists] = useState([]);
 
-  const UserId = localStorage.getItem("userId");
+  const userId = localStorage.getItem("userId");
   const listColor = "#111827";
 
-  const getList = async () => {
-    try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_KEY}/list/${UserId}`
-      );
-      setLists(response.data);
-      console.log("Fetched lists:", response.data);
-    } catch (err) {
-      console.error("Error fetching lists:", err);
-    }
-  };
-
-  useEffect(() => {
-    getList();
-  }, []);
+  // Use the custom hook
+  const { lists, getLists } = useGetLists();
 
   const handleAddList = async (e) => {
     e.preventDefault();
     try {
       await axios.post(`${import.meta.env.VITE_API_KEY}/list/create`, {
         name: listName,
-        userId: UserId,
+        userId,
         listColor,
       });
       setListName("");
       setIsAddModalOpen(false);
-      getList();
+      getLists(); // Refresh the lists after adding
     } catch (error) {
       console.error("Error creating list:", error);
     }
@@ -47,13 +34,12 @@ const AddList = () => {
   return (
     <>
       <div className="h-[84vh] overflow-y-auto">
-        <div className="flex  mx-2 my-4">
-          {Lists.map((list) => (
-            <ListItem key={list._id} list={list} getList={getList} />
+        <div className="flex mx-2 my-4">
+          {lists.map((list) => (
+            <ListItem key={list._id} list={list} getList={getLists} />
           ))}
           <div className="min-w-64 h-fit bg-gray-900 text-white rounded-xl m-4 p-4 shadow-lg flex flex-col">
-            <h3 className="border-b border-gray-700 text-lg font-semibold pb-4 ">
-              {" "}
+            <h3 className="border-b border-gray-700 text-lg font-semibold pb-4">
               Add List
             </h3>
             <div>
@@ -72,7 +58,7 @@ const AddList = () => {
               </button>
 
               {isAddModalOpen && (
-                <form onSubmit={handleAddList} className="flex flex-col ">
+                <form onSubmit={handleAddList} className="flex flex-col">
                   <input
                     className="w-full border rounded p-1 mt-2 outline-none bg-transparent"
                     type="text"
@@ -84,13 +70,13 @@ const AddList = () => {
                   <div>
                     <button
                       type="submit"
-                      className="bg-gray-700 hover:bg-gray-800 w-24 text-white uppercase px-4 py-1 rounded "
+                      className="bg-gray-700 hover:bg-gray-800 w-24 text-white uppercase px-4 py-1 rounded"
                     >
                       Save
                     </button>
 
                     <span
-                      className="text-gray-700 hover:text-gray-800 cursor-pointer text-4xl font-bold px-2 h-4 "
+                      className="text-gray-700 hover:text-gray-800 cursor-pointer text-4xl font-bold px-2 h-4"
                       onClick={() => setIsAddModalOpen(false)}
                     >
                       &times;
