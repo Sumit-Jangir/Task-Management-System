@@ -16,6 +16,18 @@ const userSchema = new mongoose.Schema(
     conformPassword: {
       type: String,
     },
+    expiryTime:{
+      type: String,
+    },
+    bgUrl:{
+      type: String,
+    },
+    referralCode:{
+      type:String
+    },
+    refCode:{
+      type:String
+    }
   },
   { versionKey: false, timestamps: true }
 );
