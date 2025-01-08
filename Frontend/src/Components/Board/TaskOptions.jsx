@@ -265,12 +265,12 @@ const TaskOptions = ({ task, list, setOpenTaskOptions, getTasks }) => {
                 </div>
               )}
 
-              <button
+              {/* <button
                 onClick={(e) => handleOpenTaskOptions(e, "attachment")}
                 className="bg-gray-700 hover:bg-gray-600 rounded-sm my-1 py-1 pl-3 text-start"
               >
                 Attachment
-              </button>
+              </button> */}
               <button
                 onClick={(e) => handleOpenTaskOptions(e, "location")}
                 className="bg-gray-700 hover:bg-gray-600 rounded-sm my-1 py-1 pl-3 text-start"
@@ -308,7 +308,7 @@ const TaskOptions = ({ task, list, setOpenTaskOptions, getTasks }) => {
             <label className="my-1 text-start">
               Add start date :
               <input
-                className="block w-40 border p-1 mb-4 rounded-md bg-transparent cursor-pointer"
+                className="block w-40 border p-1 mb-4 mt-1 rounded-md bg-transparent cursor-pointer"
                 type="date"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
@@ -317,7 +317,7 @@ const TaskOptions = ({ task, list, setOpenTaskOptions, getTasks }) => {
             <label className=" my-1 text-start">
               Add due date :
               <input
-                className="block w-40 border p-1 rounded-md bg-transparent cursor-pointer mb-3"
+                className="block w-40 border p-1 mt-1 rounded-md bg-transparent cursor-pointer mb-3"
                 type="date"
                 value={dueDate}
                 onChange={(e) => setDueDate(e.target.value)}
