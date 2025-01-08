@@ -117,7 +117,7 @@ export const getTasksWithDueDate = async (req, res) => {
   }
 };
 
-export const getTasksForList = async (req, res) => {
+export const getTasksFromList = async (req, res) => {
   const { listId } = req.params;
   try {
     if (!mongoose.Types.ObjectId.isValid(listId)) {
@@ -174,10 +174,28 @@ export const updateTaskColor = async (req, res) => {
       { new: true, upsert: true }
     );
     if (!updatedTask) {
-      return res.status(404).json({ error: "List not found" });
+      return res.status(404).json({ error: "task not found" });
     }
     res.status(200).json(updatedTask);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
+
+export const deleteTask = async (req, res) => {
+  try {
+    const { taskId } = req.body; 
+
+
+    const Task = await taskSchema.findByIdAndDelete(
+      taskId
+    );
+    if (!Task) {
+      return res.status(404).json({ error: "Task not found" });
+    }
+    res.status(200).json(Task);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+

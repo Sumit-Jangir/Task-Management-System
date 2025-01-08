@@ -4,9 +4,10 @@ import {
   addDueDate,
   addStartDate,
   createTask,
+  deleteTask,
   getAllTasks,
   getLocation,
-  getTasksForList,
+  getTasksFromList,
   getTasksWithDueDate,
   setLocation,
   updateTask,
@@ -23,7 +24,8 @@ route.post("/getLocation", getLocation);
 route.put("/updateTaskColor", updateTaskColor);
 route.post("/getdueDateTask", getTasksWithDueDate);
 route.post("/allTask", getAllTasks);
-route.get("/:listId", getTasksForList);
+route.get("/:listId", getTasksFromList);
 route.put("/update/:taskId", updateTask);
+route.post("/deleteTask",deleteTask)
 
 export default route;

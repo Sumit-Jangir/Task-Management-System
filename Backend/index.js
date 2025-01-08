@@ -2,11 +2,10 @@ import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import cors from 'cors';
-
 import authRoute from './Router/authRoute.js';
 import ListRoute from './Router/ListRoute.js';
 import taskRoute from './Router/taskRoute.js';
-
+import settingRoute from './Router/settingRoute.js';
 dotenv.config(); 
 
 const app = express();
@@ -27,6 +26,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/auth', authRoute);
 app.use('/list', ListRoute);
 app.use('/task', taskRoute);
+app.use('/setting', settingRoute);
 
 mongoose
   .connect(MONGOURL)
