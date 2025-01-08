@@ -4,7 +4,8 @@ import './index.css'
 import App from './App.jsx'
 import { Toaster } from 'react-hot-toast'
 import { Provider } from "react-redux";
-import {store} from "./Components/Redux/store.jsx"
+import TaskOptions from './Components/Board/TaskOptions.jsx'
+import { store } from './Redux/store.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
