@@ -8,8 +8,11 @@ const listSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
+  listColor: {
+    type: String,
+  },
 });
 
 const ListModel = mongoose.model("lists", listSchema);
 
-export default ListModel; // Correctly export the model
+export default ListModel;
