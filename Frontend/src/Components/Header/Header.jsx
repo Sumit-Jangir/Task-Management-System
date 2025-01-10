@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate, NavLink } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { clearToken } from "../../Redux/slice.jsx";
+import { Link, NavLink } from "react-router-dom";
+import {  useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBars,
@@ -11,10 +10,9 @@ import {
 import axios from "axios";
 import toast from "react-hot-toast";
 import Sidebar from "./Sidebar.jsx";
+import useGetUser from "../CustomHooks/useGetUser.jsx";
 
 const Header = ({ setIsUrl }) => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
   const userId = localStorage.getItem("userId");
 
@@ -25,59 +23,37 @@ const Header = ({ setIsUrl }) => {
   const [selectCheck, setSelectCheck] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
-  const [userDetail, setUserDetail] = useState({});
+  // const [userDetail, setUserDetail] = useState({});
   const [isSideBarOpen, setIsSidebarOpen] = useState(false);
+  const [isShowTeam, setIsShowTeam] = useState(false);
 
   const [referredUsers, setReferredUsers] = useState([]);
-  const [error, setError] = useState("");
 
-  const getUser = async () => {
-    try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_KEY}/auth/getUser`,
-        {
-          userId,
-        }
-      );
-      setUserDetail(response.data);
-      console.log("user", response.data);
-      // getBgUrl();
-      handleReferralFetch();
-    } catch (error) {
-      console.error("Error getuser:", error);
-    }
-  };
-  useEffect(() => {
-    getUser();
-  }, []);
+  const {userDetail, getUser} = useGetUser();
 
-  const handleReferralFetch = async () => {
-    try {
-      // Replace 'email' and 'referralCode' with the actual values from the logged-in user
 
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_KEY}/setting/getReferredUsers`,
-        {
-          email: userDetail.email,
-          referralCode: userDetail.referralCode,
-        }
-      );
 
-      // Set the referred users from the API response
-      setReferredUsers(response.data.referredUsers[0].referredUsers);
-      console.log(
-        "response.data.referredUsers",
-        response.data.referredUsers[0].referredUsers
-      );
-    } catch (err) {
-      setError("Failed to fetch referred users");
-      console.error(err);
-    }
-  };
+  // const getUser = async () => {
+  //   try {
+  //     const response = await axios.post(
+  //       `${import.meta.env.VITE_API_KEY}/auth/getUser`,
+  //       {
+  //         userId,
+  //       }
+  //     );
+  //     setUserDetail(response.data);
+  //     console.log("user", response.data);
+  //     // getBgUrl();
+  //     handleReferralFetch();
+  //   } catch (error) {
+  //     console.error("Error getuser:", error);
+  //   }
+  // };
+  // useEffect(() => {
+  //   getUser();
+  // }, [userId]);
 
-  useEffect(() => {
-    handleReferralFetch();
-  }, [navItems]);
+
 
   const handleCheckboxChange = (option) => {
     setSelectCheck((prev) =>
@@ -141,12 +117,6 @@ const Header = ({ setIsUrl }) => {
     }
   };
 
-  // const handleLogout = () => {
-  //   dispatch(clearToken());
-  //   setIsUrl(""); // Reset background state
-  //   navigate("/login");
-  // };
-
   useEffect(() => {
     setIsLogin(!!token);
   }, [token]);
@@ -163,15 +133,41 @@ const Header = ({ setIsUrl }) => {
       top: rect.top + window.scrollY,
       left: rect.left + window.scrollX,
     });
-    setShowDropdown((prev) => !prev);
+    // setShowDropdown((prev) => !prev);
   };
 
-  const handleCloseDropdown = () => {
-    setShowDropdown(false);
+  // const handleCloseDropdown = () => {
+  //   setShowDropdown(false);
+  // };
+
+  const handleReferralFetch = async () => {
+    try {
+      // Replace 'email' and 'referralCode' with the actual values from the logged-in user
+
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_KEY}/setting/getReferredUsers`,
+        {
+          email: userDetail.email,
+          referralCode: userDetail.referralCode,
+        }
+      );
+
+      // Set the referred users from the API response
+      setReferredUsers(response.data.referredUsers[0].referredUsers);
+      // console.log(
+      //   "response.data.referredUsers",
+      //   response.data
+      // );
+    } catch (err) {
+      console.error(err);
+    }
   };
-  console.log("khbk",referredUsers);
+
+  useEffect(() => {
+    handleReferralFetch();
+  }, [userDetail]);
+
   
-
   return (
     <>
       <section
@@ -186,7 +182,7 @@ const Header = ({ setIsUrl }) => {
             <FontAwesomeIcon icon={faBars} />
           </div>
           {isSideBarOpen && <Sidebar setIsSidebarOpen={setIsSidebarOpen} />}
-          <Link className="text-2xl text-white font-bold">Welcome User</Link>
+          <Link className="text-2xl text-white font-bold">{userDetail.name}</Link>
           <NavLink
             className={({ isActive }) =>
               ` text-white ml-10 px-3 py-1 rounded-md ${
@@ -339,7 +335,9 @@ const Header = ({ setIsUrl }) => {
             </NavLink>
           )}
           <button
-            onClick={handleOpenNavList}
+            onClick={(e) => (
+              handleOpenNavList(e), setShowDropdown((prev) => !prev)
+            )}
             className={`text-white text-lg px-2  pb-[3px] mx-1 rounded-md ${
               showDropdown ? "bg-white !text-gray-900" : ""
             }`}
@@ -352,8 +350,14 @@ const Header = ({ setIsUrl }) => {
           {isLogin ? (
             <>
               <div className="inline-block">
-             <div className=" h-10 w-11 bg-green-500 flex justify-center items-center rounded-full">
-             {referredUsers?.length} <FontAwesomeIcon className="mx-1" icon={faUser} />
+                <div
+                  onClick={(e) => (
+                    handleOpenNavList(e), setIsShowTeam((prev) => !prev)
+                  )}
+                  className=" h-10 w-11 bg-blue-500 flex justify-center items-center rounded-full cursor-pointer"
+                >
+                  {referredUsers?.length + 1}{" "}
+                  <FontAwesomeIcon className="mx-1" icon={faUser} />
                 </div>
               </div>
               <button
@@ -423,7 +427,7 @@ const Header = ({ setIsUrl }) => {
             <form onSubmit={handleShare} className="w-60 p-2">
               <input
                 type="email"
-                placeholder="Enter new name"
+                placeholder="Enter email"
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full border rounded p-1 px-2 -mt-2 m-1 outline-none bg-transparent"
                 required
@@ -511,6 +515,49 @@ const Header = ({ setIsUrl }) => {
             >
               Done
             </button>
+          </div>
+        </div>
+      )}
+
+      {isShowTeam && (
+        <div
+          className="fixed z-50 inset-0 flex items-center justify-center bg-black bg-opacity-5"
+          onClick={() => setIsShowTeam(false)}
+        >
+          <div
+            className="relative z-50 text-slate-300 min-w-52 bg-gray-800 rounded-lg shadow-lg p-3"
+            style={{
+              position: "absolute",
+              top: `${40 + menuPosition.top}px`,
+              left: `${-150 + menuPosition.left}px`,
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex gap-3 my-4 pb-3">
+              <div className="w-11 h-11 rounded-full text-2xl bg-green-500 flex items-center justify-center">
+                {userDetail?.name ? (
+                  userDetail.name.slice(0, 1).toUpperCase()
+                ) : (
+                  <FontAwesomeIcon icon={faUser} />
+                )}
+              </div>
+              <div className="text-sm">
+                <p>{userDetail?.name}</p>
+                <p>{userDetail?.email}</p>
+              </div>
+            </div>
+
+            {referredUsers.map((user) => (
+              <div className="flex gap-3 my-4 pb-3">
+                <div className="w-11 h-11 rounded-full text-2xl bg-purple-500 flex items-center justify-center">
+                  {user.name ? user.name.slice(0, 1).toUpperCase() : <FontAwesomeIcon icon={faUser} />}
+                </div>
+                <div className="text-sm">
+                  <p>{user.name}</p>
+                  <p>{user.email}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       )}
