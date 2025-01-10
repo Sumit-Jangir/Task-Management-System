@@ -20,7 +20,7 @@ function Login({ getBgUrl }) {
       if (response.status === 200) {
         toast.success("Login Successfully!");
         setUserDetail({});
-        localStorage.setItem("token", response.data.token);
+        // localStorage.setItem("token", response.data.token);
         dispatch(setToken(response.data.token));
         localStorage.setItem("userId", response.data._id);
   

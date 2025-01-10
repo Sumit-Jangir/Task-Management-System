@@ -1,15 +1,29 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
-import SignUp from "./Components/SignUp.jsx";
-import Header from "./Components/Header.jsx";
-import { BrowserRouter, Navigate, Outlet, Route, Router, Routes } from "react-router-dom";
-import Login from "./Components/Login.jsx";
-import AddList from "./Components/AddList.jsx";
+import SignUp from "./Components/auth/SignUp.jsx";
+import Header from "./Components/Header/Header.jsx";
+import {
+  BrowserRouter,
+  Navigate,
+  Outlet,
+  Route,
+  Routes,
+} from "react-router-dom";
+import Login from "./Components/auth/Login.jsx";
+import AddList from "./Components/Board/AddList.jsx";
+import Table from "./Components/Table/Table.jsx";
+import CalendarComponent from "./Components/Calendear/Calendar.jsx";
+import Navbar from "./Components/Header/Navbar.jsx";
+import axios from "axios";
+import Map from "./Components/map/Map.jsx";
+import Dashboard from "./Components/Dashboard/Dashboard.jsx";
+import Sidebar from "./Components/Header/Sidebar.jsx";
 
 function App() {
+  const [isUrl, setIsUrl] = useState("");
+
   const useAuth = () => {
     const token = localStorage.getItem("token");
-    // setUserDetails(true)
     return token;
   };
 
@@ -18,100 +32,59 @@ function App() {
     return isAuth ? <Outlet /> : <Navigate to="/login" />;
   };
 
+  const isAuth = useAuth(); 
+  
+  const getBgUrl = async () => {
+    try {
+      const userId = localStorage.getItem("userId");
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_KEY}/setting/getUrl`,
+        { userId }
+      );
+      console.log("API Response:", response);
+      setIsUrl(response.data.bgUrl || "11"); 
+    } catch (error) {
+      console.error("Error in getBgUrl:", error);
+    }
+  };
+
+  useEffect(() => {
+    getBgUrl();
+    ProtectedRoutes()
+  }, [isUrl]); 
   return (
     <>
       <BrowserRouter>
-        <Header />
-        <Routes>
-          <Route path="/login" element={<Login />}></Route>
-          <Route path="/signup" element={<SignUp />}></Route>
-          <Route element={<ProtectedRoutes />}>
-            <Route path="/" element={<AddList />}></Route>
-          </Route>
-        </Routes>
+      {isAuth && <Navbar getBgUrl={getBgUrl} setIsUrl={setIsUrl}/>}
+      {/* {isAuth && <Sidebar/>} */}
+        <Header setIsUrl={setIsUrl} />
+        <div
+          className="h-[92.6vh] relative pt-11"
+          style={{
+            // ...(isUrl
+            //   ? {
+                  backgroundImage: `url(${isUrl})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+              //   }
+              // : { backgroundColor: "#5c5389" }),
+          }}
+        >
+          <Routes>
+            <Route path="/login" element={<Login getBgUrl={getBgUrl} />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route element={<ProtectedRoutes />}>
+              <Route path="/" element={<AddList />} />
+              <Route path="/table" element={<Table />} />
+              <Route path="/calendar" element={<CalendarComponent />} />
+              <Route path="/dashboard" element={<Dashboard/>} />
+              <Route path="/map" element={<Map />} />
+            </Route>
+          </Routes>
+        </div>
       </BrowserRouter>
     </>
   );
 }
 
 export default App;
-
-// import { useState } from 'react';
-// // import { Column } from './Column';
-// import { DndContext } from '@dnd-kit/core';
-// import { Column } from './Column';
-
-// const COLUMNS = [
-//   { id: 'TODO', title: 'To Do' },
-//   { id: 'IN_PROGRESS', title: 'In Progress' },
-//   { id: 'DONE', title: 'Done' },
-// ];
-
-// const INITIAL_TASKS = [
-//   {
-//     id: '1',
-//     title: 'Research Project',
-//     description: 'Gather requirements and create initial documentation',
-//     status: 'TODO',
-//   },
-//   {
-//     id: '2',
-//     title: 'Design System',
-//     description: 'Create component library and design tokens',
-//     status: 'TODO',
-//   },
-//   {
-//     id: '3',
-//     title: 'API Integration',
-//     description: 'Implement REST API endpoints',
-//     status: 'IN_PROGRESS',
-//   },
-//   {
-//     id: '4',
-//     title: 'Testing',
-//     description: 'Write unit tests for core functionality',
-//     status: 'DONE',
-//   },
-// ];
-
-// export default function App() {
-//   const [tasks, setTasks] = useState(INITIAL_TASKS);
-
-//   function handleDragEnd(event) {
-//     const { active, over } = event;
-
-//     if (!over) return;
-
-//     const taskId = active.id;
-//     const newStatus = over.id;
-
-//     setTasks(() =>
-//       tasks.map((task) =>
-//         task.id === taskId
-//           ? {
-//               ...task,
-//               status: newStatus,
-//             }
-//           : task,
-//       ),
-//     );
-//   }
-
-//   return (
-//     <div className="p-4">
-//       <div className="flex gap-8">
-//         <DndContext onDragEnd={handleDragEnd}>
-//           {COLUMNS.map((column) => {
-//             return (
-//               <Column
-//                 key={column.id}
-//                 column={column}
-//                 tasks={tasks.filter((task) => task.status === column.id)}
-//               />
-//             );
-//           })}
-//         </DndContext>
-//       </div>
-//     </div>
-//   );
-// }
