@@ -8,32 +8,32 @@ import {
   faTimes,
   faPenToSquare,
 } from "@fortawesome/free-solid-svg-icons";
-import ListOptions from "./TaskOptions.jsx";
 import TaskOptions from "./TaskOptions.jsx";
+import useGetTasks from "../CustomHooks/useGetTasks.jsx";
 
 const ListItem = ({ list, getList }) => {
   const [showTaskInput, setShowTaskInput] = useState(false);
-  const [tasks, setTasks] = useState([]);
-  const [loading, setLoading] = useState(true);
+  // const [tasks, setTasks] = useState([]);
   const [openListOptions, setOpenListOptions] = useState(false);
   const [openTaskOptions, setOpenTaskOptions] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
   const [selectedTask, setSelectedTask] = useState(null);
   
+  const { tasks, getTasks } = useGetTasks(list._id)
 
-  const getTasks = async () => {
-    try {
-      setLoading(true);
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_KEY}/task/${list._id}`
-      );
-      setTasks(response.data);
-    } catch (err) {
-      console.error("Error fetching tasks:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // const getTasks = async () => {
+  //   try {
+  //     setLoading(true);
+  //     const response = await axios.get(
+  //       `${import.meta.env.VITE_API_KEY}/task/${list._id}`
+  //     );
+  //     setTasks(response.data);
+  //   } catch (err) {
+  //     console.error("Error fetching tasks:", err);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   useEffect(() => {
     getTasks();
@@ -144,7 +144,7 @@ const ListItem = ({ list, getList }) => {
               onClick={(e) => handleOpenTaskOptions(e, task)} 
               style={{backgroundColor:`${task.taskColor}`}}
               key={task._id}
-              className=" bg-gray-800 text-gray-400 rounded-md px-3 py-2 shadow-sm"
+              className=" bg-gray-700 text-gray-400 rounded-md px-3 py-2 shadow-sm"
               draggable="true"
               onDragStart={(e) => handleDragStart(e, task._id)}
             >
