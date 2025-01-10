@@ -29,6 +29,9 @@ const task = mongoose.Schema({
     type: Boolean,
     default: false
   },
+  image: {
+    type: String,
+  },
   taskColor: {
     type: String,
   },

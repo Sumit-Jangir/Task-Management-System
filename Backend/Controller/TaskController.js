@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import taskSchema from "../Model/taskSchema.js";
 import listSchema from "../Model/listSchema.js";
-
+import {uploadFile} from "../Cloudinary/uploadFile.js"
 export const createTask = async (req, res) => {
   const { name, listId, userId, listName } = req.body;
   try {
@@ -148,12 +148,12 @@ export const getAllTasks = async (req, res) => {
 
 export const updateTask = async (req, res) => {
   const { taskId } = req.params;
-  const { listId } = req.body;
+  const { listId,listName } = req.body;
 
-  console.log("jh");
   try {
     const task = await taskSchema.findById(taskId);
     task.listId = listId;
+    task.listName = listName;
     await task.save();
 
     res.status(200).json(task);
@@ -166,7 +166,7 @@ export const updateTaskColor = async (req, res) => {
   try {
     const { taskId, taskColor } = req.body; 
 
-    console.log(">>>>>>>",taskId, taskColor)
+    // console.log(">>>>>>>",taskId, taskColor)
 
     const updatedTask = await taskSchema.findByIdAndUpdate(
       taskId, 
@@ -176,11 +176,43 @@ export const updateTaskColor = async (req, res) => {
     if (!updatedTask) {
       return res.status(404).json({ error: "task not found" });
     }
+    console.log("updatedTask", updatedTask);
+    
     res.status(200).json(updatedTask);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
+
+
+export const setAttachment = async (req, res) => {
+  try {
+    const { taskId } = req.body; // Get taskId from body
+    const image = req.file; // Access the uploaded file via req.file
+    
+    if (!image) {
+      return res.status(400).json({ error: "No file uploaded" });
+    }
+    
+    // Upload the file to Cloudinary
+    console.log("Received file object:", image);
+    const uploadedFile = await uploadFile(image); // uploadFile should return the uploaded file URL
+    console.log("Uploaded file URL:", uploadedFile);
+
+    // Update the task with the uploaded image URL
+    const updatedTask = await taskSchema.findByIdAndUpdate(
+      taskId,
+      { image: uploadedFile }, // Directly using uploadedFile URL
+      { new: true, upsert: true }
+    );
+
+    return res.status(200).json({ success: true, data: uploadedFile });
+  } catch (error) {
+    console.error("Error uploading file:", error);
+    return res.status(500).json({ error: error.message });
+  }
+};
+
 
 export const deleteTask = async (req, res) => {
   try {

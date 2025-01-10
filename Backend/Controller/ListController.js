@@ -41,7 +41,6 @@ export const updateListColor = async (req, res) => {
 };
 
 export const deleteList = async (req, res) => {
-  console.log("Request Body:", req.body); 
   const {listId} = req.body;
 
   try{
