@@ -4,7 +4,7 @@ import { create, deleteList, getListsByUser, updateListColor } from '../Controll
 const route = express.Router();
 
 route.post('/create', create )
-route.get("/:userId", getListsByUser);
+route.get("/:userId",VerifyToken, getListsByUser);
 route.put("/updatecolor", updateListColor);
 route.delete("/deleteList", deleteList);
 

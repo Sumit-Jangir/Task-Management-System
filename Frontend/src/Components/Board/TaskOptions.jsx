@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import axios from "axios"; // Import axios
 import Map from "../map/Map";
+import toast from "react-hot-toast";
 
 const TaskOptions = ({ task, list, setOpenTaskOptions, getTasks }) => {
   const [dueDate, setDueDate] = useState("");
@@ -14,6 +15,8 @@ const TaskOptions = ({ task, list, setOpenTaskOptions, getTasks }) => {
     locationGet: false,
   });
   const [labelToggle, setLabelToggle] = useState(false);
+  const [file, setFile] = useState(null);
+  const [isUploading, setIsUploading] = useState(false);
 
   const handleSave = async () => {
     if (startDate) {
@@ -27,7 +30,8 @@ const TaskOptions = ({ task, list, setOpenTaskOptions, getTasks }) => {
         );
 
         if (response.status === 200) {
-          setIsTaskFeatureOpen(""); // Close the options after saving
+          setIsTaskFeatureOpen("");
+          getTasks();
         }
       } catch (error) {
         console.error("Error updating task:", error);
@@ -49,7 +53,8 @@ const TaskOptions = ({ task, list, setOpenTaskOptions, getTasks }) => {
         );
 
         if (response.status === 200) {
-          setIsTaskFeatureOpen(""); // Close the options after saving
+          setIsTaskFeatureOpen(""); 
+          getTasks();
         }
       } catch (error) {
         console.error("Error updating task:", error);
@@ -136,18 +141,54 @@ const TaskOptions = ({ task, list, setOpenTaskOptions, getTasks }) => {
 
   const handleDeleteTask = async () => {
     try {
-      const response = await axios.post(
+      const response = await axios.delete(
         `${import.meta.env.VITE_API_KEY}/task/deleteTask`,
-        {
-          taskId: task._id,
-        }
+        // {
+        //   taskId: task._id,
+        // }
+        { data: { taskId: task._id } }
       );
-      console.log("Color updated:", response.data);
-      setOpenTaskOptions(false)
+      setOpenTaskOptions(false);
+      toast.success("Task deleted successfully");
       getTasks();
     } catch (error) {
+      console.error("Error", error.response?.data || error.message);
+    }
+  };
+
+  const handleUploadfile = async () => {
+    if (!file) {
+      toast.error("Please select a file to upload");
+      return;
+    }
+    const formData = new FormData();
+    formData.append("taskId", task._id);
+    if (file) {
+      formData.append("image", file);
+    }
+
+    // console.log("file", file);
+    setIsUploading(true)
+    try {
+      const response = await axios.put(
+        `${import.meta.env.VITE_API_KEY}/task/setAttachment`,
+        formData
+        // {
+        //   headers: {
+        //     "Content-Type": "multipart/form-data",
+        //   },
+        // }
+      );
+      // setIsTaskFeatureOpen("");
+      setOpenTaskOptions(false);
+      console.log("File uploaded:", response.data);
+      getTasks();
+      toast.success("File uploaded successfully");
+      setIsUploading(false)
+    } catch (error) {
+      setIsUploading(false)
       console.error(
-        "Error",
+        "Error uploading file:",
         error.response?.data || error.message
       );
     }
@@ -214,6 +255,20 @@ const TaskOptions = ({ task, list, setOpenTaskOptions, getTasks }) => {
                   </div>
                 </div>
               )}
+              {task.image && (
+                
+                 <div className="p-2 ml-6">
+                  Attachment
+                  <div className="overflow-hidden rounded-md">
+                  <img
+                    src={task.image}
+                    alt="attachment"
+                    className="max-h-52 object-cover rounded-md"
+                    />
+                  </div>
+                </div>
+                
+              )}
             </div>
 
             <div className="flex flex-col  w-40 mb-4 mx-4 text-lg">
@@ -265,19 +320,22 @@ const TaskOptions = ({ task, list, setOpenTaskOptions, getTasks }) => {
                 </div>
               )}
 
-              {/* <button
+              <button
                 onClick={(e) => handleOpenTaskOptions(e, "attachment")}
                 className="bg-gray-700 hover:bg-gray-600 rounded-sm my-1 py-1 pl-3 text-start"
               >
                 Attachment
-              </button> */}
+              </button>
               <button
                 onClick={(e) => handleOpenTaskOptions(e, "location")}
                 className="bg-gray-700 hover:bg-gray-600 rounded-sm my-1 py-1 pl-3 text-start"
               >
                 Location
               </button>
-              <button onClick={handleDeleteTask} className="bg-gray-700 hover:bg-red-500 rounded-sm my-1 py-1 pl-3 text-start">
+              <button
+                onClick={handleDeleteTask}
+                className="bg-gray-700 hover:bg-red-500 rounded-sm my-1 py-1 pl-3 text-start"
+              >
                 Delete card
               </button>
             </div>
@@ -365,6 +423,40 @@ const TaskOptions = ({ task, list, setOpenTaskOptions, getTasks }) => {
               className=" border hover:bg-gray-600 px-4 py-1 my-1 rounded"
             >
               {location.locationGet ? "Disable Location" : "Enable Location"}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {isTaskFeatureOpen == "attachment" && (
+        <div
+          className="fixed z-[100] inset-0 flex items-center justify-center bg-black bg-opacity-50"
+          onClick={() => setIsTaskFeatureOpen("")}
+        >
+          <div
+            className="relative text-slate-300 min-w-44 bg-gray-800 rounded-lg shadow-lg p-3"
+            style={{
+              position: "absolute",
+              top: `${menuPosition.top}px`,
+              left: `${-170 + menuPosition.left}px`,
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <label>
+              Choose image
+              <input
+                className="block my-4"
+                type="file"
+                required
+                accept="image/*"
+                onChange={(e) => setFile(e.target.files[0])}
+              />
+            </label>
+            <button
+              onClick={handleUploadfile}
+              className="block bg-gray-700 hover:bg-gray-600 text-white px-4 py-1 rounded"
+            >
+              {isUploading ? "Uploading..." : "Upload"}
             </button>
           </div>
         </div>

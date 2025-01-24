@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import { useDispatch } from "react-redux";
-import { setToken } from "../../Redux/slice";
+import { setToken } from "../Redux/slice";
 
 function Login({ getBgUrl }) {
   const [userDetail, setUserDetail] = useState({});

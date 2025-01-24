@@ -3,7 +3,7 @@ import ListItem from "./ListItem.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
-import useGetLists from "../CustomHooks/useGetLists.jsx";
+import useGetLists from "../../CustomHooks/useGetLists.jsx";
 
 const AddList = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);

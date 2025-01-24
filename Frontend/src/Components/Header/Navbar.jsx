@@ -10,7 +10,7 @@ import { useDispatch } from "react-redux";
 import { clearToken } from "../../Redux/slice";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import useGetUser from "../CustomHooks/useGetUser";
+import useGetUser from "../../CustomHooks/useGetUser";
 
 const Navbar = ({ getBgUrl, setIsUrl }) => {
   const [isOpenTemplate, setIsOpenTemplate] = useState(false);

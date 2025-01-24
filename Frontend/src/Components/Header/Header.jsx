@@ -10,7 +10,7 @@ import {
 import axios from "axios";
 import toast from "react-hot-toast";
 import Sidebar from "./Sidebar.jsx";
-import useGetUser from "../CustomHooks/useGetUser.jsx";
+import useGetUser from "../../CustomHooks/useGetUser.jsx";
 
 const Header = ({ setIsUrl }) => {
   const token = useSelector((state) => state.auth.token);

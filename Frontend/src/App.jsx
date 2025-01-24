@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import SignUp from "./Components/auth/SignUp.jsx";
+import SignUp from "./auth/SignUp.jsx";
 import Header from "./Components/Header/Header.jsx";
 import {
   BrowserRouter,
@@ -9,7 +9,7 @@ import {
   Route,
   Routes,
 } from "react-router-dom";
-import Login from "./Components/auth/Login.jsx";
+import Login from "./auth/Login.jsx";
 import AddList from "./Components/Board/AddList.jsx";
 import Table from "./Components/Table/Table.jsx";
 import CalendarComponent from "./Components/Calendear/Calendar.jsx";

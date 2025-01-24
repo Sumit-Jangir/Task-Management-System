@@ -176,7 +176,7 @@ export const updateTaskColor = async (req, res) => {
     if (!updatedTask) {
       return res.status(404).json({ error: "task not found" });
     }
-    console.log("updatedTask", updatedTask);
+    // console.log("updatedTask", updatedTask);
     
     res.status(200).json(updatedTask);
   } catch (error) {

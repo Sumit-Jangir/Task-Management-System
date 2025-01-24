@@ -7,9 +7,13 @@ import {
   faEllipsisH,
   faTimes,
   faPenToSquare,
+  faLocationDot,
+  faPaperclip,
 } from "@fortawesome/free-solid-svg-icons";
 import TaskOptions from "./TaskOptions.jsx";
-import useGetTasks from "../CustomHooks/useGetTasks.jsx";
+import useGetTasks from "../../CustomHooks/useGetTasks.jsx";
+import moment from "moment";
+import toast from "react-hot-toast";
 
 const ListItem = ({ list, getList }) => {
   const [showTaskInput, setShowTaskInput] = useState(false);
@@ -18,8 +22,8 @@ const ListItem = ({ list, getList }) => {
   const [openTaskOptions, setOpenTaskOptions] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
   const [selectedTask, setSelectedTask] = useState(null);
-  
-  const { tasks, getTasks } = useGetTasks(list._id)
+
+  const { tasks, getTasks } = useGetTasks(list._id);
 
   // const getTasks = async () => {
   //   try {
@@ -50,6 +54,7 @@ const ListItem = ({ list, getList }) => {
     try {
       await axios.put(`${import.meta.env.VITE_API_KEY}/task/update/${taskId}`, {
         listId: list._id,
+        listName: list.name,
       });
       getTasks();
       getList();
@@ -106,6 +111,7 @@ const ListItem = ({ list, getList }) => {
         `${import.meta.env.VITE_API_KEY}/list/deleteList`,
         { data: { listId } }
       );
+      toast.success(response.data.message);
       getList();
     } catch (error) {
       console.error(
@@ -114,8 +120,6 @@ const ListItem = ({ list, getList }) => {
       );
     }
   };
-
-  
 
   return (
     <>
@@ -141,10 +145,10 @@ const ListItem = ({ list, getList }) => {
         <div className="space-y-2 mt-3">
           {tasks.map((task) => (
             <div
-              onClick={(e) => handleOpenTaskOptions(e, task)} 
-              style={{backgroundColor:`${task.taskColor}`}}
+              onClick={(e) => handleOpenTaskOptions(e, task)}
+              style={{ backgroundColor: `${task.taskColor}` }}
               key={task._id}
-              className=" bg-gray-700 text-gray-400 rounded-md px-3 py-2 shadow-sm"
+              className=" bg-gray-700 text-gray-300 rounded-md px-3 py-2 shadow-sm"
               draggable="true"
               onDragStart={(e) => handleDragStart(e, task._id)}
             >
@@ -152,14 +156,36 @@ const ListItem = ({ list, getList }) => {
                 {task.name}
                 <FontAwesomeIcon className="opacity-30" icon={faPenToSquare} />
               </div>
-              {/* {task.startDate} */}
+              <div className="flex justify-between items-center">
+                {(task.startDate || task.dueDate) && (
+                  <div
+                    className="bg-green-500 text-gray-900 rounded-md px-2 py-1 mt-1 text-sm"
+                    style={{
+                      backgroundColor: `${
+                        new Date(task.dueDate) < new Date() && "red"
+                      }`,
+                    }}
+                  >
+                    {task.startDate && (
+                      <span>{moment(task.startDate).format("MMM-DD")}</span>
+                    )}
+                    {task.dueDate && (
+                      <span> - {moment(task.dueDate).format("MMM-DD")}</span>
+                    )}
+                  </div>
+                )}
+                <div className="text-end space-x-2">
+                  {task.location && <FontAwesomeIcon icon={faLocationDot} />}
+                  {task.image && <FontAwesomeIcon icon={faPaperclip} />}
+                </div>
+              </div>
 
               {openTaskOptions && (
                 <TaskOptions
                   task={selectedTask}
                   list={list}
                   setOpenTaskOptions={setOpenTaskOptions}
-                  getTasks = {getTasks}
+                  getTasks={getTasks}
                   // handleDeleteTask={handleDeleteTask} // Delete task functionality
                 />
               )}
@@ -235,7 +261,7 @@ const ListItem = ({ list, getList }) => {
 
             <button
               onClick={() => handleDeletelist(list._id)}
-              className=" mb-4 hover:bg-gray-500 px-2 py-1 rounded-sm"
+              className=" mb-4 hover:bg-red-500 hover:text-gray-900  px-2 py-1 rounded-sm"
             >
               Delete List
             </button>

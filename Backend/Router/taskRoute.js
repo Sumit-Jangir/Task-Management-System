@@ -28,7 +28,7 @@ route.post("/getLocation", getLocation);
 route.put("/updateTaskColor", updateTaskColor);
 route.post("/getdueDateTask", getTasksWithDueDate);
 route.post("/allTask", getAllTasks);
-route.get("/:listId", getTasksFromList);
+route.get("/:listId",VerifyToken, getTasksFromList);
 route.put("/update/:taskId", updateTask);
 route.delete("/deleteTask", deleteTask);
 route.put("/setAttachment", upload.single("image"), setAttachment);

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Chart, registerables } from "chart.js";
-import useGetLists from "../CustomHooks/useGetLists";
+import useGetLists from "../../CustomHooks/useGetLists";
 import axios from "axios";
 
 const Chart1 = () => {
@@ -10,19 +10,23 @@ const Chart1 = () => {
 
   const { lists, getLists } = useGetLists();
   const userId = localStorage.getItem("userId");
-
+  // console.log("lists", lists);
   useEffect(() => {
-    if (lists.length === 0) return; 
+    if (lists.length === 0) return;
 
     const fetchTasks = async () => {
       const counts = [];
 
-      // Loop through each list and fetch tasks
       for (const list of lists) {
         if (list.user === userId) {
           try {
             const response = await axios.get(
-              `${import.meta.env.VITE_API_KEY}/task/${list._id}`
+              `${import.meta.env.VITE_API_KEY}/task/${list._id}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem("token")}`,
+                },
+              }
             );
             counts.push({
               listName: list.name,
@@ -34,26 +38,23 @@ const Chart1 = () => {
         }
       }
 
-      setTaskCounts(counts); // Update taskCounts with fetched data
+      setTaskCounts(counts);
     };
 
-    fetchTasks(); // Trigger the task fetching
-  }, [lists, userId]); // Re-run whenever lists or userId changes
+    fetchTasks();
+  }, [lists, userId]);
 
   useEffect(() => {
-    if (!taskCounts.length || !chartRef.current) return; // Ensure taskCounts and canvas are available
+    if (!taskCounts.length || !chartRef.current) return;
 
-    // Register necessary components from Chart.js
     Chart.register(...registerables);
 
     const ctx = chartRef.current.getContext("2d");
 
-    // Destroy existing chart if one exists
     if (chartInstance.current) {
       chartInstance.current.destroy();
     }
 
-    // Create a new chart with fetched task data
     chartInstance.current = new Chart(ctx, {
       type: "bar",
       data: {
@@ -63,7 +64,7 @@ const Chart1 = () => {
             label: "Tasks per List",
             data: taskCounts.map((data) => data.taskCount),
             backgroundColor: "#87888a",
-            borderRadius: 10, // Set borderRadius for bar corners
+            borderRadius: 10,
           },
         ],
       },
@@ -77,29 +78,28 @@ const Chart1 = () => {
           y: {
             beginAtZero: true,
             ticks: {
-              stepSize: 1, // Step size of the y-axis ticks, which forces integers
-              callback: function(value) {
-                return value % 1 === 0 ? value : ''; // Remove decimals
-              }
+              stepSize: 1, 
+              callback: function (value) {
+                return value % 1 === 0 ? value : ""; 
+              },
             },
           },
         },
-        // Optional: Add some styling to the chart
+        
         elements: {
           bar: {
-            borderRadius: 10, // Apply borderRadius to the bars
+            borderRadius: 10, 
           },
         },
       },
     });
 
-    // Cleanup function to destroy chart instance when component unmounts
     return () => {
       if (chartInstance.current) {
         chartInstance.current.destroy();
       }
     };
-  }, [taskCounts]); // Re-run when taskCounts change
+  }, [taskCounts]); 
 
   return (
     <div className="h-[500px] w-[47%] bg-gray-900 p-9 ml-6 rounded-lg">

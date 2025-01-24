@@ -5,11 +5,12 @@ const useGetLists = () => {
   const [lists, setLists] = useState([]);
 
   const userId = localStorage.getItem("userId");
+  const token = localStorage.getItem("token");
 
   const getLists = async () => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_API_KEY}/list/${userId}`
+        `${import.meta.env.VITE_API_KEY}/list/${userId}`,{headers:{Authorization:`Baerer ${token}`}}
       );
       console.log("list");
       
