@@ -2,10 +2,10 @@ import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import authRoute from './Router/authRoute.js';
-import ListRoute from './Router/ListRoute.js';
-import taskRoute from './Router/taskRoute.js';
-import settingRoute from './Router/settingRoute.js';
+import authRoute from './Routes/authRoute.js';
+import ListRoute from './Routes/ListRoute.js';
+import taskRoute from './Routes/taskRoute.js';
+import settingRoute from './Routes/settingRoute.js';
 dotenv.config(); 
 
 const app = express();
