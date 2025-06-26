@@ -1,10 +1,18 @@
+import React, { useState, useRef, useEffect } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
-import React, { useState } from "react";
 
-const Task = ({ list, getList ,showTaskInput,setShowTaskInput }) => {
-  const [isAddModalOpen, setIsAddModalOpen] = useState(true);
+const Task = ({ list, getList, setShowTaskInput }) => {
   const [newTask, setNewTask] = useState("");
+  const inputRef = useRef(null);
   const userId = localStorage.getItem("userId");
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, []);
 
   const addNewTask = async (e) => {
     e.preventDefault();
@@ -34,43 +42,33 @@ const Task = ({ list, getList ,showTaskInput,setShowTaskInput }) => {
   };
 
   return (
-    <>
-      {showTaskInput && (
-        /* <span
-            className="text-gray-700 hover:text-gray-800 cursor-pointer text-4xl font-bold absolute top-0 right-3"
-            onClick={() => setIsAddModalOpen(false)}
-          >
-            &times;
-          </span>
-          <h3 className="text-xl font-bold pb-4">Add New List</h3> */
+    <form onSubmit={addNewTask} className="mt-2">
+      <input
+        ref={inputRef}
+        className="w-full bg-gray-700/80 text-white border border-gray-600 rounded-md px-3 py-2 shadow-sm outline-none placeholder-gray-400 focus:border-[#fcfcfc] focus:bg-gray-700 transition-all"
+        type="text"
+        value={newTask}
+        onChange={(e) => setNewTask(e.target.value)}
+        placeholder="Enter task name"
+      />
 
-        <form onSubmit={addNewTask} className="flex flex-col p">
-          <input
-            className="w-full border rounded p-1 mt-2 outline-none bg-transparent"
-            type="text"
-            value={newTask}
-            onChange={(e) => setNewTask(e.target.value)}
-            placeholder="Enter task name"
-          />
+      <div className="mt-2 flex items-center space-x-2">
+        <button
+          type="submit"
+          className="bg-gray-700 hover:bg-gray-800 text-white uppercase px-4 py-1.5 rounded-md transition-colors"
+        >
+          Add Task
+        </button>
 
-          <div>
-            <button
-              type="submit"
-              className="bg-gray-700 hover:bg-gray-800 w-24 text-white uppercase px-4 py-1 rounded "
-            >
-              Save
-            </button>
-
-            <span
-              className="text-gray-700 hover:text-gray-800 cursor-pointer text-4xl font-bold px-2 h-4 "
-              onClick={() => setShowTaskInput(false)}
-            >
-              &times;
-            </span>
-          </div>
-        </form>
-      )}
-    </>
+        <button
+          type="button"
+          onClick={() => setShowTaskInput(false)}
+          className="text-gray-400 hover:text-gray-200 transition-colors"
+        >
+          <FontAwesomeIcon icon={faTimes} className="text-xl" />
+        </button>
+      </div>
+    </form>
   );
 };
 

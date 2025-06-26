@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import ListItem from "./ListItem.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
@@ -8,12 +8,19 @@ import useGetLists from "../../CustomHooks/useGetLists.jsx";
 const AddList = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [listName, setListName] = useState("");
+  const inputRef = useRef(null);
 
   const userId = localStorage.getItem("userId");
   const listColor = "#111827";
 
   // Use the custom hook
   const { lists, getLists } = useGetLists();
+
+  useEffect(() => {
+    if (isAddModalOpen && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isAddModalOpen]);
 
   const handleAddList = async (e) => {
     e.preventDefault();
@@ -60,23 +67,24 @@ const AddList = () => {
               {isAddModalOpen && (
                 <form onSubmit={handleAddList} className="flex flex-col">
                   <input
-                    className="w-full border rounded p-1 mt-2 outline-none bg-transparent"
+                    ref={inputRef}
+                    className="w-full border border-gray-600 rounded-md p-2 mt-2 outline-none bg-gray-700/50 text-white placeholder-gray-400 focus:border-[#fcfcfc] transition-colors"
                     type="text"
                     value={listName}
                     onChange={(e) => setListName(e.target.value)}
                     placeholder="Enter list name"
                   />
 
-                  <div>
+                  <div className="mt-2">
                     <button
                       type="submit"
-                      className="bg-gray-700 hover:bg-gray-800 w-24 text-white uppercase px-4 py-1 rounded"
+                      className="bg-gray-700 hover:bg-gray-800 w-24 text-white uppercase px-4 py-1.5 rounded-md transition-colors"
                     >
                       Save
                     </button>
 
                     <span
-                      className="text-gray-700 hover:text-gray-800 cursor-pointer text-4xl font-bold px-2 h-4"
+                      className="text-gray-400 hover:text-gray-200 cursor-pointer text-2xl font-bold px-2 ml-2"
                       onClick={() => setIsAddModalOpen(false)}
                     >
                       &times;
