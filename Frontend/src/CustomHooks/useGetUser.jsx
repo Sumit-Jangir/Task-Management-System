@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 const useGetUser = () => {
   const [userDetail, setUserDetail] = useState({});
   const userId = localStorage.getItem("userId");
-  const token = localStorage.getItem("token"); // Assuming the token is stored in localStorage
+  const token = localStorage.getItem("token"); 
   
   const getUser = async () => {
     try {

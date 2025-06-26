@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 
 function SignUp() {
   const [userDetail, setuserDetail] = useState({});
-  const [referral , setReferral]  = useState(false)
+  const [referral, setReferral] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -27,19 +27,18 @@ function SignUp() {
   };
 
   return (
-    <div className="  flex justify-center items-center h-[90vh] w-[100vw]">
-      <div className=" bg-gray-400 p-5 rounded-lg shadow-md w-[400px] mx-auto">
-        <h2 className="text-center mb-5 text-gray-800 text-xl font-semibold">
-          Sign Up
-        </h2>
-        <form onSubmit={handleSubmit}>
-          <label className="block mb-3 text-start">
-            Name:
+    <div className="h-screen bg-[#1D2125] flex items-center justify-center px-4">
+      <div className="w-full max-w-[400px] bg-[#282E33] rounded-lg shadow-xl p-8">
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-[#9FADBC] text-sm font-medium mb-1.5">
+              Full Name
+            </label>
             <input
               type="text"
-              placeholder="Enter name"
+              placeholder="Enter your name"
               name="name"
-              className="w-full p-2 mt-1 border border-gray-300 rounded-md"
+              className="w-full px-4 py-2 bg-[#22272B] border border-[#A6C5E229] rounded-md text-white placeholder-[#9FADBC] focus:outline-none focus:ring-2 focus:ring-[#579DFF] focus:border-transparent transition-colors"
               required
               onChange={(e) =>
                 setuserDetail({
@@ -48,14 +47,17 @@ function SignUp() {
                 })
               }
             />
-          </label>
-          <label className="block mb-3 text-start">
-            Email:
+          </div>
+
+          <div>
+            <label className="block text-[#9FADBC] text-sm font-medium mb-1.5">
+              Email
+            </label>
             <input
               type="email"
-              placeholder="Enter email"
+              placeholder="Enter your email"
               name="email"
-              className="w-full p-2 mt-1 border border-gray-300 rounded-md"
+              className="w-full px-4 py-2 bg-[#22272B] border border-[#A6C5E229] rounded-md text-white placeholder-[#9FADBC] focus:outline-none focus:ring-2 focus:ring-[#579DFF] focus:border-transparent transition-colors"
               required
               onChange={(e) =>
                 setuserDetail({
@@ -64,14 +66,17 @@ function SignUp() {
                 })
               }
             />
-          </label>
-          <label className="block mb-3 text-start">
-            Password:
+          </div>
+
+          <div>
+            <label className="block text-[#9FADBC] text-sm font-medium mb-1.5">
+              Password
+            </label>
             <input
               type="password"
-              placeholder="Enter password"
+              placeholder="Create a password"
               name="password"
-              className="w-full p-2 mt-1 border border-gray-300 rounded-md"
+              className="w-full px-4 py-2 bg-[#22272B] border border-[#A6C5E229] rounded-md text-white placeholder-[#9FADBC] focus:outline-none focus:ring-2 focus:ring-[#579DFF] focus:border-transparent transition-colors"
               required
               onChange={(e) =>
                 setuserDetail({
@@ -80,14 +85,17 @@ function SignUp() {
                 })
               }
             />
-          </label>
-          <label className="block mb-3 text-start">
-            Confirm Password:
+          </div>
+
+          <div>
+            <label className="block text-[#9FADBC] text-sm font-medium mb-1.5">
+              Confirm Password
+            </label>
             <input
               type="password"
-              placeholder="Confirm Password"
+              placeholder="Confirm your password"
               name="confirmPassword"
-              className="w-full p-2 mt-1 border border-gray-300 rounded-md"
+              className="w-full px-4 py-2 bg-[#22272B] border border-[#A6C5E229] rounded-md text-white placeholder-[#9FADBC] focus:outline-none focus:ring-2 focus:ring-[#579DFF] focus:border-transparent transition-colors"
               required
               onChange={(e) =>
                 setuserDetail({
@@ -96,32 +104,56 @@ function SignUp() {
                 })
               }
             />
-          </label>
-          <p onClick={()=>setReferral(!referral)} className="block mb-3 text-start cursor-pointer" >Referral Code (Optional) &#8595;</p>
-          {referral && <input
-              type="text"
-              placeholder="enter referral code"
-              className="w-full p-2 mt-1 border mb-3 border-gray-300 rounded-md"
-              onChange={(e) =>
-                setuserDetail({
-                  ...userDetail,
-                  refCode: e.target.value,
-                })
-              }
-            />}
+          </div>
+
+          <div>
+            <button
+              type="button"
+              onClick={() => setReferral(!referral)}
+              className="text-[#9FADBC] hover:text-[#579DFF] text-sm font-medium transition-colors flex items-center gap-2"
+            >
+              Referral Code (Optional)
+              <svg
+                className={`w-4 h-4 transition-transform ${referral ? 'rotate-180' : ''}`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            
+            {referral && (
+              <input
+                type="text"
+                placeholder="Enter referral code"
+                className="w-full mt-2 px-4 py-2 bg-[#22272B] border border-[#A6C5E229] rounded-md text-white placeholder-[#9FADBC] focus:outline-none focus:ring-2 focus:ring-[#579DFF] focus:border-transparent transition-colors"
+                onChange={(e) =>
+                  setuserDetail({
+                    ...userDetail,
+                    refCode: e.target.value,
+                  })
+                }
+              />
+            )}
+          </div>
+
           <button
             type="submit"
-            className="w-full p-2 bg-gray-800 hover:bg-gray-900 text-white rounded-md font-semibold"
+            className="w-full bg-[#579DFF] hover:bg-[#579DFF]/90 text-white font-medium py-2 px-4 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-[#579DFF] focus:ring-offset-2 focus:ring-offset-[#282E33]"
           >
-            Sign Up
+            Create account
           </button>
+
+          <div className="text-center">
+            <p className="text-[#9FADBC] text-sm">
+              Already have an account?{" "}
+              <Link to="/login" className="text-[#579DFF] hover:underline font-medium">
+                Log in
+              </Link>
+            </p>
+          </div>
         </form>
-        <p className="mt-2 text-sm text-center text-gray-600">
-          Already have an account?{" "}
-          <Link to="/login" className="text-blue-500 hover:underline">
-            Login
-          </Link>
-        </p>
       </div>
     </div>
   );

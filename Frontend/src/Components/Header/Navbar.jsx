@@ -166,57 +166,6 @@ const Navbar = ({ getBgUrl, setIsUrl }) => {
           <span className="text-xl font-bold">Trello</span>
         </div>
         <div className="flex items-center gap-2">
-          <button className="hover:bg-gray-700 px-2 py-1 rounded-md text-gray-400">
-            Workspaces
-            <svg
-              className="inline-block"
-              width="24"
-              height="24"
-              role="presentation"
-              focusable="false"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M11.2929 16.7071L4.22185 9.63606C3.83132 9.24554 3.83132 8.61237 4.22185 8.22185C4.61237 7.83133 5.24554 7.83133 5.63606 8.22185L12 14.5858L18.364 8.22185C18.7545 7.83132 19.3877 7.83132 19.7782 8.22185C20.1687 8.61237 20.1687 9.24554 19.7782 9.63606L12.7071 16.7071C12.3166 17.0977 11.6834 17.0977 11.2929 16.7071Z"
-                fill="currentColor"
-              ></path>
-            </svg>
-          </button>
-          <button className="hover:bg-gray-700 px-2 py-1 rounded-md text-gray-400">
-            Recent
-            <svg
-              className="inline-block"
-              width="24"
-              height="24"
-              role="presentation"
-              focusable="false"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M11.2929 16.7071L4.22185 9.63606C3.83132 9.24554 3.83132 8.61237 4.22185 8.22185C4.61237 7.83133 5.24554 7.83133 5.63606 8.22185L12 14.5858L18.364 8.22185C18.7545 7.83132 19.3877 7.83132 19.7782 8.22185C20.1687 8.61237 20.1687 9.24554 19.7782 9.63606L12.7071 16.7071C12.3166 17.0977 11.6834 17.0977 11.2929 16.7071Z"
-                fill="currentColor"
-              ></path>
-            </svg>
-          </button>
-          <button className="hover:bg-gray-700 px-2 py-1 rounded-md text-gray-400">
-            Starred
-            <svg
-              className="inline-block"
-              width="24"
-              height="24"
-              role="presentation"
-              focusable="false"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M11.2929 16.7071L4.22185 9.63606C3.83132 9.24554 3.83132 8.61237 4.22185 8.22185C4.61237 7.83133 5.24554 7.83133 5.63606 8.22185L12 14.5858L18.364 8.22185C18.7545 7.83132 19.3877 7.83132 19.7782 8.22185C20.1687 8.61237 20.1687 9.24554 19.7782 9.63606L12.7071 16.7071C12.3166 17.0977 11.6834 17.0977 11.2929 16.7071Z"
-                fill="currentColor"
-              ></path>
-            </svg>
-          </button>
           <button
             onClick={handleTemplate}
             className="hover:bg-gray-700 px-2 py-1 rounded-md text-gray-400"
@@ -240,19 +189,12 @@ const Navbar = ({ getBgUrl, setIsUrl }) => {
         </div>
       </div>
 
-      {/* Right Section */}
+       {/* Right Section  */}
       <div className="flex items-center gap-4">
         <div className= " flex bg-[linear-gradient(75deg,_#8271d9_25.62%,_#7a36aa_99.57%)] px-3 py-1 rounded text-sm">
           <svg width="20" height="20" viewBox="0 0 24 24" role="presentation"><path fill="currentcolor" fill-rule="evenodd" d="M9.276 4.382 7.357 9.247l-4.863 1.917a.78.78 0 0 0 0 1.45l4.863 1.918 1.919 4.863a.78.78 0 0 0 1.45 0h-.001l1.918-4.863 4.864-1.919a.781.781 0 0 0 0-1.45l-4.864-1.916-1.918-4.865a.78.78 0 0 0-.44-.438.78.78 0 0 0-1.01.438m8.297-2.03-.743 1.886-1.884.743a.56.56 0 0 0 0 1.038l1.884.743.743 1.886a.558.558 0 0 0 1.038 0l.745-1.886 1.883-.743a.557.557 0 0 0 0-1.038l-1.883-.743-.745-1.885a.55.55 0 0 0-.314-.314.56.56 0 0 0-.724.314m-.704 13.003-.744 1.883-1.883.744a.55.55 0 0 0-.316.314.56.56 0 0 0 .316.724l1.883.743.744 1.884c.057.144.17.258.314.315a.56.56 0 0 0 .724-.315l.744-1.884 1.883-.743a.557.557 0 0 0 0-1.038l-1.883-.744-.744-1.883a.55.55 0 0 0-.315-.316.56.56 0 0 0-.723.316"></path></svg> {expiryTime} days left
         </div>
-        <div>
-          <input
-            type="text"
-            placeholder="Search"
-            className="px-2 py-1 rounded bg-gray-800 text-white border border-gray-700 focus:outline-none"
-          />
-        </div>
-        <button className="hover:text-blue-400">?</button>
+       
         <div
           onClick={() => setIsOpenUserInfo(!isOpenUserInfo)}
           className="w-8 h-8 rounded-full bg-green-500 cursor-pointer flex items-center justify-center"

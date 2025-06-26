@@ -10,7 +10,7 @@ const useGetLists = () => {
   const getLists = async () => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_API_KEY}/list/${userId}`,{headers:{Authorization:`Baerer ${token}`}}
+        `${import.meta.env.VITE_API_KEY}/list/${userId}`,{headers:{Authorization:`Bearer ${token}`}}
       );
       console.log("list");
       

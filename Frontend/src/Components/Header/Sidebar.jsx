@@ -125,7 +125,7 @@ const Sidebar = ({ setIsSidebarOpen }) => {
         {/* Dashboard Tab */}
         <NavLink
           className={({ isActive }) =>
-            `flex items-center gap-2 px-4 py-2 rounded-md ${
+            `hidden md:flex items-center gap-2 px-4 py-2 rounded-md ${
               isActive
                 ? "bg-white text-[#172b4d] font-semibold"
                 : "hover:bg-[#1d3557]"

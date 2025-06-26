@@ -34,7 +34,7 @@ const AddList = () => {
   return (
     <>
       <div className="h-[84vh] overflow-y-auto">
-        <div className="flex mx-2 my-4">
+        <div className="flex mx-2 my-4 scrollbar-hide">
           {lists.map((list) => (
             <ListItem key={list._id} list={list} getList={getLists} />
           ))}
